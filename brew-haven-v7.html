@@ -1,0 +1,2419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+<title>Brew Haven — Specialty Coffee & Artisanal Café</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;0,900;1,400;1,700&family=Didact+Gothic&family=Cormorant:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<style>
+/* ── TOKENS ── */
+:root{
+  --bg:#0C0905;
+  --bg2:#110D08;
+  --bg3:#181208;
+  --gold:#BF9B54;
+  --gold2:#D4AF6A;
+  --gold3:#F0D080;
+  --cream:#F2EAD8;
+  --cream2:#E8DCC8;
+  --text-muted:rgba(242,234,216,0.45);
+  --serif:'Playfair Display',Georgia,serif;
+  --italic:'Cormorant',Georgia,serif;
+  --sans:'Didact Gothic',sans-serif;
+  --nav-h:68px;
+  --side:5vw;
+}
+@media(min-width:768px){:root{--side:6vw;--nav-h:80px}}
+
+/* ── RESET ── */
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;overflow-x:hidden;-webkit-text-size-adjust:100%}
+body{
+  background:var(--bg);
+  color:var(--cream);
+  font-family:var(--sans);
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+  min-width:320px;
+  max-width:100vw;
+}
+img{display:block;max-width:100%;height:auto}
+a{color:inherit;text-decoration:none}
+button{font-family:inherit;cursor:pointer;border:none;background:none}
+
+/* ── CUSTOM CURSOR (desktop only) ── */
+#cur,#cur2{display:none}
+@media(hover:hover) and (pointer:fine){
+  #cur{display:block;position:fixed;width:8px;height:8px;background:var(--gold);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:width .3s,height .3s,box-shadow .3s;box-shadow:0 0 5px 2px rgba(191,155,84,.4),0 0 10px 3px rgba(191,155,84,.15)}
+  #cur2{display:block;position:fixed;width:38px;height:38px;pointer-events:none;z-index:9998;transform:translate(-50%,-50%) rotate(-20deg);transition:transform .3s ease,width .3s,height .3s;filter:drop-shadow(0 2px 8px rgba(0,0,0,.6));opacity:.9}
+  body:has(a:hover) #cur,body:has(button:hover) #cur{width:0;height:0;box-shadow:none}
+  body:has(a:hover) #cur2,body:has(button:hover) #cur2{width:48px;height:48px;transform:translate(-50%,-50%) rotate(15deg) scale(1.1);filter:drop-shadow(0 3px 12px rgba(191,155,84,.55))}
+  body{cursor:none}
+  a,button,.mc,*{cursor:none!important}
+}
+
+/* ══════════════════════════
+   NAV
+══════════════════════════ */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:200;
+  padding:0 var(--side);
+  height:var(--nav-h);
+  display:flex;align-items:center;justify-content:space-between;
+  transition:background .5s,border-color .5s,height .4s;
+}
+nav.solid{
+  background:rgba(12,9,5,.94);
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+  border-bottom:1px solid rgba(191,155,84,.1);
+  height:58px;
+}
+.logo{
+  font-family:var(--serif);font-size:1.35rem;font-weight:400;
+  letter-spacing:.06em;color:var(--cream);flex-shrink:0;
+}
+.logo span{color:var(--gold);font-style:italic}
+
+/* Desktop nav links */
+.nav-links{display:none}
+@media(min-width:900px){
+  .nav-links{
+    display:flex;gap:2.4rem;list-style:none;
+    position:absolute;left:50%;transform:translateX(-50%);
+  }
+  .nav-links a{
+    color:var(--cream);font-size:.65rem;letter-spacing:.22em;
+    text-transform:uppercase;opacity:.55;transition:opacity .3s,color .3s;
+  }
+  .nav-links a:hover{opacity:1;color:var(--gold2)}
+}
+
+/* Desktop CTA */
+.nav-reserve{display:none}
+@media(min-width:900px){
+  .nav-reserve{
+    display:inline-block;
+    font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;
+    color:var(--gold);border:1px solid rgba(191,155,84,.45);
+    padding:.55rem 1.5rem;transition:all .3s;
+  }
+  .nav-reserve:hover{background:var(--gold);color:var(--bg)}
+}
+
+/* Hamburger */
+.nav-burger{
+  display:flex;flex-direction:column;gap:5px;padding:8px;
+  cursor:pointer;z-index:210;
+}
+@media(min-width:900px){.nav-burger{display:none}}
+.nav-burger span{
+  display:block;width:22px;height:1.5px;
+  background:var(--cream);transition:transform .35s,opacity .3s;
+  transform-origin:center;
+}
+.nav-burger.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+.nav-burger.open span:nth-child(2){opacity:0;transform:scaleX(0)}
+.nav-burger.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+
+/* Mobile menu panel */
+.mobile-menu{
+  position:fixed;inset:0;z-index:190;
+  background:rgba(12,9,5,.98);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:2.5rem;
+  opacity:0;pointer-events:none;
+  transition:opacity .4s ease;
+}
+.mobile-menu.open{opacity:1;pointer-events:auto}
+.mobile-menu a{
+  font-family:var(--serif);font-size:clamp(2rem,8vw,3rem);
+  color:var(--cream);opacity:.6;
+  transition:opacity .3s,color .3s;letter-spacing:.02em;
+}
+.mobile-menu a:hover,.mobile-menu a:active{opacity:1;color:var(--gold2)}
+.mobile-menu .mm-cta{
+  margin-top:1rem;
+  font-family:var(--sans);font-size:.7rem;
+  letter-spacing:.22em;text-transform:uppercase;
+  color:var(--gold);border:1px solid rgba(191,155,84,.4);
+  padding:.75rem 2.2rem;
+}
+
+/* ══════════════════════════
+   HERO
+══════════════════════════ */
+#hero{
+  min-height:100svh;min-height:100vh;
+  display:flex;align-items:center;
+  position:relative;overflow:hidden;
+  padding:var(--nav-h) var(--side) 3rem;
+}
+@media(min-width:768px){
+  /* On desktop, hero is split: content left ~48%, image cluster right ~52% */
+  #hero{align-items:center}
+}
+.hero-bg{
+  position:absolute;inset:0;
+  background:radial-gradient(ellipse 100% 90% at 60% 50%,#2A1A06 0%,#110D08 45%,#0C0905 100%);
+}
+.hero-vignette{position:absolute;inset:0;background:radial-gradient(ellipse 50% 70% at 5% 50%,rgba(12,9,5,.65),transparent 65%)}
+
+/* Decorative lines */
+.hero-lines{position:absolute;right:0;top:0;bottom:0;width:52%;pointer-events:none}
+.hero-lines::before{content:'';position:absolute;top:0;bottom:0;left:0;width:1px;background:linear-gradient(to bottom,transparent,rgba(191,155,84,.15) 20%,rgba(191,155,84,.15) 80%,transparent)}
+.hero-lines::after{content:'';position:absolute;top:0;bottom:0;left:30%;width:1px;background:linear-gradient(to bottom,transparent,rgba(191,155,84,.06) 20%,rgba(191,155,84,.06) 80%,transparent)}
+@media(max-width:767px){.hero-lines{opacity:0;pointer-events:none}}
+
+/* Hero image zone — desktop layout */
+.hero-img-zone{
+  position:absolute;right:3vw;top:50%;transform:translateY(-50%);
+  width:46%;height:88vh;pointer-events:none;
+  overflow:visible;
+}
+/* Mobile layout handled in the mobile @media block below */
+.hero-main-img{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  width:min(320px,44vw);height:min(320px,44vw);
+  border-radius:50%;overflow:hidden;
+  border:1px solid rgba(191,155,84,.2);
+  box-shadow:0 0 100px rgba(191,155,84,.07),0 0 50px rgba(0,0,0,.7);
+}
+.hero-main-img img{width:100%;height:100%;object-fit:cover;filter:brightness(.9) saturate(1.1)}
+.hero-float-img{
+  position:absolute;border-radius:50%;overflow:hidden;
+  border:1px solid rgba(191,155,84,.15);
+  box-shadow:0 16px 50px rgba(0,0,0,.55);
+  will-change:transform;
+}
+.hero-float-img img{width:100%;height:100%;object-fit:cover;filter:brightness(.85) saturate(1.1)}
+.hf1{width:130px;height:130px;top:8%;left:58%}
+.hf2{width:100px;height:100px;bottom:12%;left:4%}
+.hf3{width:85px;height:85px;top:19%;left:9%}
+/* Mobile sizes + positions overridden in @media(max-width:767px) block */
+.hero-ring{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:380px;height:380px;border-radius:50%;border:1px solid rgba(191,155,84,.07);pointer-events:none;will-change:transform}
+.hero-ring2{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:480px;height:480px;border-radius:50%;border:1px solid rgba(191,155,84,.04);pointer-events:none;will-change:transform}
+
+/* Hero content */
+.hero-content{
+  position:relative;z-index:2;
+  max-width:min(520px,100%);
+  width:100%;
+}
+@media(min-width:768px){
+  .hero-content{
+    max-width:46%;
+    /* Ensure content doesn't overlap the right-side image cluster */
+    flex-shrink:0;
+  }
+}
+
+/* Hero accent line decoration */
+.hero-accent-line{
+  position:absolute;left:calc(var(--side) - 1px);top:15%;bottom:15%;
+  width:1px;
+  background:linear-gradient(to bottom,transparent,rgba(191,155,84,.25) 30%,rgba(191,155,84,.25) 70%,transparent);
+  pointer-events:none;z-index:1;
+}
+@media(max-width:767px){.hero-accent-line{display:none}}
+
+/* Coffee bean ambient particles */
+.hero-particles{
+  position:absolute;inset:0;pointer-events:none;z-index:1;overflow:hidden;
+}
+.hparticle{
+  position:absolute;border-radius:50%;
+  background:radial-gradient(circle,rgba(191,155,84,.18),transparent 70%);
+  will-change:transform;
+}
+.hp1{width:6px;height:6px;top:22%;left:8%}
+.hp2{width:4px;height:4px;top:55%;left:12%}
+.hp3{width:5px;height:5px;top:38%;left:5%}
+.hp4{width:3px;height:3px;top:72%;left:18%}
+.hp5{width:7px;height:7px;top:15%;left:30%}
+@media(max-width:767px){.hero-particles{opacity:.5}}
+
+.hero-tag{
+  font-size:.6rem;letter-spacing:.28em;text-transform:uppercase;
+  color:var(--gold);
+  display:flex;align-items:center;gap:.9rem;
+  margin-bottom:1.5rem;
+}
+.hero-tag::before{content:'';width:36px;height:1px;background:var(--gold);flex-shrink:0}
+@media(min-width:768px){.hero-tag{font-size:.62rem;margin-bottom:1.8rem}}
+
+.hero-h1{
+  font-family:var(--serif);
+  font-size:clamp(2.8rem,9vw,6.2rem);
+  font-weight:700;line-height:1.03;
+  letter-spacing:-.02em;color:var(--cream);
+  margin-bottom:1.3rem;
+}
+.hero-h1 em{font-style:italic;font-weight:400;color:var(--gold2)}
+@media(min-width:768px){.hero-h1{margin-bottom:1.6rem}}
+
+.hero-p{
+  font-size:.84rem;line-height:1.95;
+  color:var(--text-muted);
+  max-width:340px;
+  margin-bottom:2.2rem;letter-spacing:.02em;
+}
+@media(min-width:768px){.hero-p{font-size:.9rem;margin-bottom:2.8rem}}
+
+.hero-btns{
+  display:flex;flex-wrap:wrap;gap:1rem;
+  align-items:center;
+}
+.btn-gold{
+  background:linear-gradient(135deg,var(--gold),var(--gold2));
+  color:var(--bg);padding:.9rem 2.2rem;
+  font-family:var(--sans);font-size:.65rem;
+  letter-spacing:.2em;text-transform:uppercase;
+  display:inline-block;transition:transform .2s,box-shadow .3s;
+  font-weight:600;box-shadow:0 8px 28px rgba(191,155,84,.25);
+  white-space:nowrap;
+}
+.btn-gold:hover{transform:translateY(-2px);box-shadow:0 14px 36px rgba(191,155,84,.35)}
+.btn-gold:active{transform:translateY(0)}
+.btn-text{
+  color:var(--cream);font-size:.65rem;letter-spacing:.2em;
+  text-transform:uppercase;opacity:.55;
+  transition:opacity .3s;display:flex;align-items:center;gap:.7rem;
+  white-space:nowrap;
+}
+.btn-text span{display:inline-block;transition:transform .3s;font-size:1.1rem;line-height:1}
+.btn-text:hover{opacity:1}
+.btn-text:hover span{transform:translateX(4px)}
+
+/* Scroll indicator */
+
+
+/* Hero stats strip — luxury accent below CTA buttons */
+.hero-stats{
+  display:flex;gap:2.2rem;margin-top:2.8rem;
+  padding-top:1.8rem;
+  border-top:1px solid rgba(191,155,84,.12);
+  position:relative;z-index:4;
+}
+.hero-stats > div{flex-shrink:0}
+.hero-stat-num{
+  font-family:var(--serif);font-size:1.4rem;font-weight:700;
+  color:var(--gold);line-height:1;white-space:nowrap;
+}
+.hero-stat-num .star{font-size:1rem;vertical-align:middle;position:relative;top:-.06em}
+.hero-stat-label{
+  font-size:.54rem;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--text-muted);margin-top:.28rem;white-space:nowrap;
+}
+@media(max-width:479px){.hero-stats{gap:1.6rem}}
+
+/* Performance: will-change for animated elements */
+.hero-float-img,.hero-main-img,.hero-ring,.hero-ring2,.hparticle{
+  will-change:transform;
+}
+
+/* Mobile hero image strip (kept in DOM but hidden — we use background cluster instead) */
+.hero-mobile-img{
+  display:none;
+  position:relative;margin-top:2.5rem;
+  border-radius:2px;overflow:hidden;aspect-ratio:16/9;
+  border:1px solid rgba(191,155,84,.15);
+  box-shadow:0 24px 60px rgba(0,0,0,.6);
+  width:100%;
+}
+.hero-mobile-img img{width:100%;height:100%;object-fit:cover;filter:brightness(.85) saturate(1.1)}
+
+@media(max-width:767px){
+  #hero{
+    align-items:flex-start;
+    padding-top:calc(var(--nav-h) + 2rem);
+    overflow:hidden;
+    min-height:100svh;min-height:100vh;
+  }
+  .hero-content{
+    position:relative;z-index:3;
+    max-width:100%;
+    padding-bottom:2rem;
+  }
+  .hero-mobile-img{display:none}
+
+  .hero-h1{font-size:clamp(2.2rem,11vw,3.5rem)}
+
+  /* ─── MOBILE IMAGE CLUSTER: full-bleed atmospheric background ─── */
+  .hero-img-zone{
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+    right:auto;top:auto;
+    transform:none;
+    z-index:1;
+    pointer-events:none;
+    overflow:visible;
+    /* Gradient mask: transparent top (text area) → visible bottom */
+    -webkit-mask-image:linear-gradient(
+      to bottom,
+      transparent 0%,
+      rgba(0,0,0,.15) 20%,
+      rgba(0,0,0,.5) 45%,
+      rgba(0,0,0,.65) 70%,
+      rgba(0,0,0,.6) 100%
+    );
+    mask-image:linear-gradient(
+      to bottom,
+      transparent 0%,
+      rgba(0,0,0,.15) 20%,
+      rgba(0,0,0,.5) 45%,
+      rgba(0,0,0,.65) 70%,
+      rgba(0,0,0,.6) 100%
+    );
+  }
+
+  /* Main circle — large, bottom-centred */
+  .hero-main-img{
+    position:absolute;
+    top:auto;
+    left:50%;
+    bottom:-6vw;
+    transform:translateX(-50%);
+    width:min(265px,74vw);
+    height:min(265px,74vw);
+  }
+
+  /* Rings too large for mobile — hide */
+  .hero-ring,.hero-ring2{display:none}
+
+  /* Satellite float images — corners of the hero */
+  .hf1{
+    width:clamp(72px,21vw,104px);
+    height:clamp(72px,21vw,104px);
+    top:30%;left:auto;right:5vw;
+  }
+  .hf2{
+    width:clamp(60px,17vw,84px);
+    height:clamp(60px,17vw,84px);
+    top:auto;bottom:24%;left:4vw;
+  }
+  .hf3{
+    width:clamp(52px,15vw,70px);
+    height:clamp(52px,15vw,70px);
+    top:22%;left:5vw;
+  }
+
+  /* Stronger top vignette so headline stays crisp over background images */
+  .hero-vignette{
+    background:
+      radial-gradient(ellipse 100% 60% at 50% 0%,rgba(12,9,5,.95),transparent 65%),
+      radial-gradient(ellipse 50% 70% at 5% 50%,rgba(12,9,5,.55),transparent 65%);
+  }
+}
+
+/* ══════════════════════════
+   MARQUEE
+══════════════════════════ */
+.marquee-outer{
+  border-top:1px solid rgba(191,155,84,.12);
+  border-bottom:1px solid rgba(191,155,84,.12);
+  background:rgba(191,155,84,.025);
+  overflow:hidden;padding:.8rem 0;
+}
+.marquee-inner{display:flex;white-space:nowrap;animation:mq 35s linear infinite;will-change:transform}
+.marquee-inner:hover{animation-play-state:paused}
+.mq-item{
+  display:inline-flex;align-items:center;gap:1rem;
+  padding:0 1.5rem;font-size:.58rem;
+  letter-spacing:.26em;text-transform:uppercase;
+  color:rgba(242,234,216,.32);
+}
+.mq-dot{width:3px;height:3px;border-radius:50%;background:var(--gold);flex-shrink:0}
+@keyframes mq{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* ══════════════════════════
+   SHARED SECTION HELPERS
+══════════════════════════ */
+.section-eyebrow{
+  font-size:.58rem;letter-spacing:.3em;text-transform:uppercase;
+  color:var(--gold);display:flex;align-items:center;gap:.8rem;
+  margin-bottom:1.1rem;
+}
+.section-eyebrow::before{content:'';width:24px;height:1px;background:var(--gold);flex-shrink:0}
+.section-h{
+  font-family:var(--serif);
+  font-size:clamp(1.9rem,4.5vw,3.4rem);
+  font-weight:700;line-height:1.1;
+  color:var(--cream);margin-bottom:.9rem;
+}
+.section-h em{color:var(--gold2);font-style:italic;font-weight:400}
+.sep-line{width:44px;height:1px;background:linear-gradient(to right,var(--gold),transparent);margin:1.4rem 0}
+.body-text{font-size:.86rem;line-height:2;color:var(--text-muted);margin-bottom:1.1rem}
+.gold-divider{display:flex;align-items:center;padding:.8rem 0}
+.gold-divider-line{flex:1;height:1px;background:linear-gradient(to right,transparent,rgba(191,155,84,.25),transparent)}
+.gold-divider-icon{width:18px;height:18px;border:1px solid rgba(191,155,84,.35);transform:rotate(45deg);flex-shrink:0;margin:0 1.2rem}
+
+/* ══════════════════════════
+   ABOUT
+══════════════════════════ */
+#about{
+  padding:6rem var(--side);
+  display:grid;grid-template-columns:1fr;
+  gap:3.5rem;
+  position:relative;overflow:hidden;
+}
+#about::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse 80% 60% at 0% 50%,rgba(28,18,5,.45),transparent 65%);
+  pointer-events:none;
+}
+@media(min-width:900px){
+  #about{grid-template-columns:1fr 1fr;gap:7rem;padding:10rem var(--side)}
+}
+
+/* About image group */
+.about-img-wrap{position:relative;z-index:1}
+.about-img-main{
+  position:relative;overflow:hidden;
+  aspect-ratio:.85;max-height:520px;
+}
+@media(max-width:899px){.about-img-main{aspect-ratio:4/3;max-height:300px}}
+.about-img-main img{width:100%;height:100%;object-fit:cover;filter:brightness(.8) saturate(1.15);display:block}
+.about-img-main::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(191,155,84,.06) 0%,transparent 50%)}
+.about-img-secondary{
+  position:absolute;bottom:-2rem;right:-2rem;
+  width:48%;aspect-ratio:1;overflow:hidden;
+  border:3px solid var(--bg);
+  box-shadow:0 20px 50px rgba(0,0,0,.65);
+}
+.about-img-secondary img{width:100%;height:100%;object-fit:cover;filter:brightness(.75) saturate(1.2)}
+@media(max-width:899px){.about-img-secondary{display:none}}
+.about-year-badge{
+  position:absolute;top:2rem;left:-1.5rem;
+  background:var(--gold);color:var(--bg);padding:1rem;text-align:center;width:80px;
+}
+@media(max-width:899px){.about-year-badge{left:1rem;top:auto;bottom:-1.5rem}}
+.about-year-badge .yr{font-family:var(--serif);font-size:1.5rem;font-weight:700;line-height:1;display:block}
+.about-year-badge .est{font-size:.52rem;letter-spacing:.2em;text-transform:uppercase;display:block;margin-top:.3rem}
+
+.about-text{z-index:1;padding-top:.5rem}
+@media(max-width:899px){.about-text{padding-top:1.5rem}}
+
+.about-pillars{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:1px;background:rgba(191,155,84,.1);
+  margin-top:2rem;
+}
+.about-pillar{background:var(--bg2);padding:1.3rem;text-align:center}
+.pillar-num{font-family:var(--serif);font-size:1.8rem;font-weight:700;color:var(--gold);line-height:1}
+.pillar-label{font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;color:var(--text-muted);margin-top:.35rem}
+
+/* ══════════════════════════
+   MENU — UPGRADED SYSTEM
+══════════════════════════ */
+#menu{
+  padding:5rem var(--side) 4rem;
+  background:var(--bg2);
+  position:relative;
+  overflow:hidden;
+  max-width:100vw;
+}
+@media(min-width:768px){#menu{padding:8rem var(--side) 6rem}}
+#menu::before{
+  content:'';position:absolute;top:-150px;right:-150px;
+  width:500px;height:500px;border-radius:50%;
+  background:radial-gradient(circle,rgba(191,155,84,.04) 0%,transparent 70%);
+  pointer-events:none;
+}
+#menu::after{
+  content:'';position:absolute;bottom:-100px;left:-100px;
+  width:400px;height:400px;border-radius:50%;
+  background:radial-gradient(circle,rgba(191,155,84,.025) 0%,transparent 70%);
+  pointer-events:none;
+}
+
+/* ── MENU HEADER ── */
+.menu-top{
+  display:flex;flex-direction:column;gap:1.5rem;
+  margin-bottom:2.5rem;
+}
+@media(min-width:768px){
+  .menu-top{flex-direction:row;justify-content:space-between;align-items:flex-end;margin-bottom:3rem}
+}
+
+/* ── FILTER SCROLL WRAPPER ── */
+.menu-filter-wrap{
+  position:relative;
+  overflow:hidden;     /* clip the scrollable bar — never bleeds to page */
+  max-width:100%;
+}
+/* Fade edge on mobile to hint scroll */
+.menu-filter-wrap::after{
+  content:'';
+  display:none;
+  position:absolute;right:0;top:0;bottom:0;width:40px;
+  background:linear-gradient(to right,transparent,var(--bg2));
+  pointer-events:none;z-index:2;
+}
+@media(max-width:767px){.menu-filter-wrap::after{display:block}}
+
+.menu-filters{
+  display:flex;gap:.35rem;
+  overflow-x:auto;
+  -webkit-overflow-scrolling:touch;
+  scrollbar-width:none;
+  padding-bottom:.25rem;
+  /* Mask: only on mobile to hint overflow */
+}
+.menu-filters::-webkit-scrollbar{display:none}
+@media(min-width:768px){
+  .menu-filters{flex-wrap:wrap;overflow-x:visible}
+}
+
+/* ── FILTER BUTTON ── */
+.mf{
+  background:transparent;
+  border:1px solid rgba(191,155,84,.18);
+  color:rgba(242,234,216,.38);
+  font-family:var(--sans);font-size:.72rem;letter-spacing:.14em;
+  text-transform:uppercase;padding:.46rem 1rem;
+  transition:border-color .3s,color .3s,background .3s,transform .15s;
+  white-space:nowrap;flex-shrink:0;
+  -webkit-tap-highlight-color:transparent;
+  position:relative;overflow:hidden;
+}
+.mf::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(191,155,84,.12),transparent);
+  opacity:0;transition:opacity .3s;
+}
+.mf.on{
+  border-color:var(--gold);color:var(--gold);
+  background:rgba(191,155,84,.08);
+}
+.mf.on::before{opacity:1}
+.mf:hover:not(.on){border-color:rgba(191,155,84,.45);color:rgba(242,234,216,.7)}
+.mf:active{transform:scale(.96)}
+@media(min-width:768px){.mf{font-size:.75rem;padding:.52rem 1.2rem}}
+
+/* ── CATEGORY DIVIDER LABEL ── */
+.menu-category-label{
+  display:flex;align-items:center;gap:1rem;
+  margin:3rem 0 1.2rem;
+  opacity:0;/* animated in */
+}
+.menu-category-label .mcl-line{flex:1;height:1px;background:linear-gradient(to right,rgba(191,155,84,.2),transparent)}
+.menu-category-label .mcl-text{
+  font-size:.58rem;letter-spacing:.28em;text-transform:uppercase;
+  color:var(--gold);white-space:nowrap;
+}
+.menu-category-label .mcl-line-r{flex:1;height:1px;background:linear-gradient(to left,rgba(191,155,84,.2),transparent)}
+
+/* ── FEATURED CARD ── */
+.menu-featured{
+  display:grid;grid-template-columns:1fr;
+  background:rgba(191,155,84,.04);
+  border:1px solid rgba(191,155,84,.12);
+  overflow:hidden;margin-bottom:10px;
+  transition:opacity .4s,transform .4s;
+}
+@media(min-width:640px){.menu-featured{grid-template-columns:1fr 1.2fr}}
+.menu-featured.hidden{display:none}
+.mf-img{position:relative;overflow:hidden;min-height:220px}
+@media(min-width:640px){.mf-img{min-height:320px}}
+.mf-img img{width:100%;height:100%;object-fit:cover;filter:brightness(.75) saturate(1.2);transition:transform .9s cubic-bezier(.25,.46,.45,.94),filter .8s}
+.menu-featured:hover .mf-img img{transform:scale(1.05);filter:brightness(.88) saturate(1.3)}
+.mf-overlay{position:absolute;inset:0;background:linear-gradient(to right,rgba(12,9,5,.3),transparent)}
+.mf-content{padding:2rem 1.8rem}
+@media(min-width:640px){.mf-content{padding:3.5rem;display:flex;flex-direction:column;justify-content:center}}
+.mf-badge{
+  display:inline-flex;align-items:center;gap:.6rem;
+  font-size:.54rem;letter-spacing:.26em;text-transform:uppercase;color:var(--gold);margin-bottom:1.1rem;
+}
+.mf-badge::before{content:'✦';font-size:.5rem}
+.mf-name{font-family:var(--serif);font-size:clamp(1.7rem,4vw,2.5rem);font-weight:700;line-height:1.08;color:var(--cream);margin-bottom:.9rem}
+.mf-name em{font-style:italic;color:var(--gold2)}
+.mf-desc{font-size:.82rem;line-height:1.95;color:var(--text-muted);margin-bottom:1.6rem;max-width:380px}
+.mf-footer{display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap}
+.mf-price{font-family:var(--serif);font-size:2rem;color:var(--gold)}
+.mf-badge-pill{
+  font-size:.52rem;letter-spacing:.18em;text-transform:uppercase;
+  padding:.32rem .9rem;border:1px solid rgba(191,155,84,.35);color:var(--gold);
+}
+
+/* ── MENU GRID ── */
+.menu-grid{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:10px;
+}
+.menu-grid:not(:empty){
+  background:transparent;
+}
+@media(min-width:480px){.menu-grid{grid-template-columns:1fr 1fr}}
+@media(min-width:900px){.menu-grid{grid-template-columns:repeat(3,1fr)}}
+
+/* ── MENU CARD ── */
+.mc{
+  background:var(--bg);overflow:hidden;position:relative;cursor:pointer;
+  transition:opacity .4s ease,transform .4s ease;
+  will-change:opacity,transform;
+}
+.mc.mc-hidden{
+  display:none;
+}
+.mc-img-wrap{position:relative;overflow:hidden;aspect-ratio:1.35}
+@media(max-width:479px){.mc-img-wrap{aspect-ratio:4/3}}
+.mc-img{
+  width:100%;height:100%;object-fit:cover;
+  filter:brightness(.72) saturate(1.15);
+  transition:transform .75s cubic-bezier(.25,.46,.45,.94),filter .55s;
+}
+.mc:hover .mc-img{transform:scale(1.07);filter:brightness(.88) saturate(1.32)}
+.mc-img-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(12,9,5,.82) 0%,rgba(12,9,5,.12) 50%,transparent 100%)}
+
+/* Category chip on image */
+.mc-img-cat{
+  position:absolute;top:.9rem;left:.9rem;
+  font-size:.52rem;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--gold);background:rgba(12,9,5,.75);
+  padding:.28rem .75rem;border:1px solid rgba(191,155,84,.28);
+  backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+}
+/* Status badge on image (Popular, New, Seasonal, etc.) */
+.mc-img-badge{
+  position:absolute;top:.9rem;right:.9rem;
+  font-size:.48rem;letter-spacing:.16em;text-transform:uppercase;
+  padding:.3rem .65rem;
+  backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+}
+.mc-img-badge.popular{color:#fff;background:rgba(191,155,84,.75);border:1px solid rgba(255,255,255,.1)}
+.mc-img-badge.new-item{color:var(--bg);background:var(--gold2);border:none}
+.mc-img-badge.seasonal{color:#fff;background:rgba(140,100,50,.8);border:1px solid rgba(191,155,84,.3)}
+.mc-img-badge.bestseller{color:var(--bg);background:linear-gradient(135deg,var(--gold),var(--gold2));border:none}
+.mc-img-badge.chefs{color:var(--gold);background:rgba(12,9,5,.75);border:1px solid rgba(191,155,84,.5)}
+
+.mc-body{padding:1rem 1.2rem 1.4rem}
+.mc-top{display:flex;justify-content:space-between;align-items:flex-start;gap:.8rem;margin-bottom:.4rem}
+.mc-name{font-family:var(--serif);font-size:1.05rem;font-weight:500;line-height:1.22;color:var(--cream)}
+.mc-price{font-family:var(--serif);font-size:.95rem;color:var(--gold);white-space:nowrap;flex-shrink:0}
+.mc-desc{font-size:.7rem;line-height:1.8;color:var(--text-muted)}
+.mc-tags{display:flex;gap:.32rem;margin-top:.85rem;flex-wrap:wrap}
+.mc-tag{font-size:.5rem;letter-spacing:.1em;text-transform:uppercase;padding:.18rem .6rem;border:1px solid rgba(191,155,84,.16);color:rgba(242,234,216,.35)}
+.mc-tag.sig{border-color:rgba(191,155,84,.5);color:var(--gold)}
+.mc-tag.veg{border-color:rgba(100,180,80,.35);color:rgba(140,210,100,.7)}
+
+/* Hover shimmer */
+.mc::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,transparent 30%,rgba(191,155,84,.03) 50%,transparent 70%);
+  opacity:0;transition:opacity .4s;
+  pointer-events:none;
+}
+.mc:hover::after{opacity:1}
+
+/* Floating hover image — desktop only */
+.mc-float-img{
+  position:absolute;top:-80px;right:-30px;
+  width:110px;height:110px;border-radius:50%;overflow:hidden;
+  opacity:0;pointer-events:none;z-index:10;
+  border:2px solid rgba(191,155,84,.3);
+  box-shadow:0 20px 50px rgba(0,0,0,.7);
+}
+.mc-float-img img{width:100%;height:100%;object-fit:cover}
+@media(max-width:899px){.mc-float-img{display:none}}
+
+/* ── EMPTY STATE ── */
+.menu-empty{
+  display:none;
+  text-align:center;
+  padding:5rem 2rem;
+  color:var(--text-muted);
+  font-family:var(--italic);
+  font-size:1.1rem;
+  font-style:italic;
+}
+
+/* ── FILTER TRANSITION OVERLAY ── */
+.menu-grid-wrap{position:relative}
+
+
+/* ══════════════════════════
+   EXPERIENCE
+══════════════════════════ */
+#experience{
+  padding:6rem var(--side);
+  position:relative;overflow:hidden;
+}
+@media(min-width:900px){#experience{padding:10rem var(--side)}}
+
+.exp-accent{
+  position:absolute;top:20%;left:-1rem;
+  font-family:var(--serif);font-size:clamp(5rem,12vw,9rem);
+  font-weight:900;color:rgba(191,155,84,.05);
+  line-height:1;pointer-events:none;white-space:nowrap;
+  user-select:none;
+}
+
+.exp-layout{
+  display:grid;grid-template-columns:1fr;gap:4rem;align-items:start;
+  position:relative;z-index:1;
+}
+@media(min-width:900px){.exp-layout{grid-template-columns:1.1fr 1fr;gap:6rem;align-items:center}}
+
+/* Collage */
+.exp-img-collage{
+  position:relative;
+  height:340px;
+}
+@media(min-width:480px){.exp-img-collage{height:420px}}
+@media(min-width:900px){.exp-img-collage{height:560px}}
+
+.exp-img-a{position:absolute;top:0;left:0;width:64%;height:76%;overflow:hidden}
+.exp-img-a img{width:100%;height:100%;object-fit:cover;filter:brightness(.75) saturate(1.15)}
+.exp-img-b{position:absolute;bottom:0;right:0;width:50%;height:54%;overflow:hidden;border:3px solid var(--bg)}
+.exp-img-b img{width:100%;height:100%;object-fit:cover;filter:brightness(.7) saturate(1.2)}
+.exp-img-c{
+  position:absolute;bottom:16%;left:50%;transform:translateX(-50%);
+  width:100px;height:100px;border-radius:50%;overflow:hidden;
+  border:3px solid var(--bg);box-shadow:0 16px 40px rgba(0,0,0,.55);
+}
+@media(min-width:900px){.exp-img-c{width:120px;height:120px}}
+.exp-img-c img{width:100%;height:100%;object-fit:cover}
+
+/* Features list */
+.exp-features{display:flex;flex-direction:column;gap:0}
+.exp-feat{
+  padding:1.6rem 0;border-bottom:1px solid rgba(191,155,84,.1);
+  display:flex;gap:1.2rem;align-items:flex-start;
+  cursor:default;transition:padding .3s;
+  position:relative;overflow:hidden;
+}
+.exp-feat::before{
+  content:'';position:absolute;left:0;top:0;bottom:0;width:2px;
+  background:var(--gold);transform:scaleY(0);transition:transform .4s;
+  transform-origin:bottom;
+}
+.exp-feat:hover::before{transform:scaleY(1)}
+.exp-feat:hover{padding-left:.8rem}
+.exp-feat-num{font-family:var(--serif);font-size:1rem;color:rgba(191,155,84,.3);font-weight:700;flex-shrink:0;padding-top:.1rem}
+.exp-feat-title{font-family:var(--serif);font-size:1.05rem;color:var(--cream);margin-bottom:.35rem}
+.exp-feat-text{font-size:.78rem;color:var(--text-muted);line-height:1.8}
+
+/* ══════════════════════════
+   TESTIMONIALS
+══════════════════════════ */
+#testimonials{
+  padding:6rem var(--side);
+  background:var(--bg2);text-align:center;
+  position:relative;overflow:hidden;
+}
+@media(min-width:768px){#testimonials{padding:8rem var(--side)}}
+.testimonials-bg-text{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  font-family:var(--serif);font-size:clamp(5rem,18vw,12rem);
+  font-weight:900;color:rgba(191,155,84,.03);
+  white-space:nowrap;pointer-events:none;line-height:1;
+  user-select:none;
+}
+.test-grid{
+  display:grid;grid-template-columns:1fr;
+  gap:2px;background:rgba(191,155,84,.06);margin-top:3.5rem;
+}
+@media(min-width:640px){.test-grid{grid-template-columns:1fr 1fr}}
+@media(min-width:900px){.test-grid{grid-template-columns:repeat(3,1fr)}}
+.test-card{
+  background:var(--bg);padding:2.2rem 1.8rem;text-align:left;
+  position:relative;overflow:hidden;
+}
+.test-card::before{
+  content:'"';position:absolute;top:-1rem;left:1.2rem;
+  font-family:var(--serif);font-size:7rem;
+  color:rgba(191,155,84,.06);line-height:1;pointer-events:none;
+}
+.test-stars{color:var(--gold);font-size:.7rem;letter-spacing:.2em;margin-bottom:1.3rem}
+.test-quote{
+  font-family:var(--italic);font-style:italic;
+  font-size:.98rem;color:var(--cream);
+  line-height:1.8;margin-bottom:1.6rem;
+}
+.test-author-row{display:flex;align-items:center;gap:.75rem}
+.test-avatar{
+  width:36px;height:36px;border-radius:50%;flex-shrink:0;
+  background:linear-gradient(135deg,var(--gold),rgba(191,155,84,.3));
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--serif);font-weight:700;font-size:.8rem;color:var(--bg);
+}
+.test-author-name{font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--cream)}
+.test-author-loc{font-size:.63rem;color:var(--text-muted)}
+
+/* ══════════════════════════
+   RESERVATION
+══════════════════════════ */
+#reservation{
+  padding:6rem var(--side);
+  display:grid;grid-template-columns:1fr;gap:3.5rem;
+  position:relative;overflow:hidden;
+}
+@media(min-width:900px){#reservation{grid-template-columns:1fr 1fr;gap:8rem;padding:10rem var(--side)}}
+
+.res-bg-img{position:absolute;inset:0;overflow:hidden}
+.res-bg-img img{width:100%;height:100%;object-fit:cover;opacity:.05;filter:blur(2px)}
+.res-bg-gradient{position:absolute;inset:0;background:linear-gradient(to bottom,var(--bg) 0%,rgba(12,9,5,.85) 60%,var(--bg) 100%)}
+@media(min-width:900px){.res-bg-gradient{background:linear-gradient(to right,var(--bg) 0%,var(--bg) 50%,transparent 100%)}}
+.res-content{position:relative;z-index:1}
+.res-hours{margin-top:2rem}
+.res-h-row{
+  display:flex;justify-content:space-between;
+  padding:.8rem 0;border-bottom:1px solid rgba(191,155,84,.09);
+  font-size:.8rem;
+}
+.res-h-day{color:var(--text-muted)}
+.res-h-time{color:var(--gold2)}
+
+/* Form */
+.res-form{position:relative;z-index:1}
+.form-row{
+  display:grid;grid-template-columns:1fr;
+  gap:.85rem;margin-bottom:.85rem;
+}
+@media(min-width:480px){.form-row{grid-template-columns:1fr 1fr}}
+.form-row.full{grid-template-columns:1fr!important}
+.f-group{display:flex;flex-direction:column;gap:.45rem}
+.f-label{font-size:.56rem;letter-spacing:.22em;text-transform:uppercase;color:rgba(242,234,216,.38)}
+.f-input,.f-select{
+  background:rgba(255,255,255,.03);
+  border:1px solid rgba(191,155,84,.15);
+  color:var(--cream);
+  padding:.85rem 1rem;
+  font-family:var(--sans);font-size:.85rem;
+  outline:none;transition:border-color .3s;
+  -webkit-appearance:none;width:100%;
+  border-radius:0;
+}
+.f-input:focus,.f-select:focus{border-color:rgba(191,155,84,.5);background:rgba(191,155,84,.03)}
+.f-input::placeholder{color:rgba(242,234,216,.18)}
+.f-select option{background:#110D08;color:var(--cream)}
+.f-submit{
+  width:100%;
+  background:linear-gradient(135deg,var(--gold),var(--gold2));
+  color:var(--bg);border:none;
+  padding:1.05rem;
+  font-family:var(--sans);font-size:.66rem;
+  letter-spacing:.22em;text-transform:uppercase;
+  font-weight:600;cursor:pointer;margin-top:.4rem;
+  transition:all .3s;
+  box-shadow:0 8px 28px rgba(191,155,84,.18);
+  -webkit-tap-highlight-color:transparent;
+}
+.f-submit:hover{box-shadow:0 14px 44px rgba(191,155,84,.32);transform:translateY(-1px)}
+.f-submit:active{transform:translateY(0)}
+
+/* ══════════════════════════
+   FOOTER
+══════════════════════════ */
+footer{
+  border-top:1px solid rgba(191,155,84,.1);
+  padding:4rem var(--side) 2rem;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:2.5rem;
+}
+@media(min-width:640px){footer{grid-template-columns:2fr 1fr 1fr}}
+@media(min-width:900px){footer{grid-template-columns:2fr 1fr 1fr 1fr;gap:3rem}}
+
+.footer-brand{grid-column:1/-1}
+@media(min-width:640px){.footer-brand{grid-column:1}}
+
+.footer-logo{font-family:var(--serif);font-size:1.35rem;color:var(--cream);display:block;margin-bottom:.7rem}
+.footer-logo span{color:var(--gold);font-style:italic}
+.footer-sub{font-size:.76rem;color:var(--text-muted);line-height:1.8;max-width:210px}
+.f-col-title{font-size:.56rem;letter-spacing:.26em;text-transform:uppercase;color:var(--gold);margin-bottom:1rem;opacity:.8}
+.f-col-links{list-style:none;display:flex;flex-direction:column;gap:.6rem}
+.f-col-links a{color:rgba(242,234,216,.38);font-size:.78rem;transition:color .3s}
+.f-col-links a:hover{color:var(--gold2)}
+.footer-bottom{
+  border-top:1px solid rgba(191,155,84,.06);
+  margin-top:2.5rem;padding-top:1.4rem;
+  display:flex;flex-wrap:wrap;justify-content:space-between;gap:.8rem;
+  font-size:.64rem;color:rgba(242,234,216,.18);
+  letter-spacing:.04em;grid-column:1/-1;
+}
+
+/* ══════════════════════════
+   REVEAL HELPERS
+══════════════════════════ */
+.reveal{opacity:0;transform:translateY(38px)}
+.reveal-left{opacity:0;transform:translateX(-55px)}
+.reveal-right{opacity:0;transform:translateX(55px)}
+.reveal-scale{opacity:0;transform:scale(.92)}
+
+/* ══════════════════════════
+   REDUCED MOTION
+══════════════════════════ */
+@media(prefers-reduced-motion:reduce){
+  .marquee-inner{animation:none}
+  *{transition-duration:.01ms!important;animation-duration:.01ms!important}
+}
+</style>
+</head>
+<body>
+
+<!-- Cursor (desktop only) -->
+<div id="cur"></div>
+<div id="cur2" aria-hidden="true">
+  <svg viewBox="0 0 100 140" xmlns="http://www.w3.org/2000/svg" width="38" height="38">
+    <defs>
+      <radialGradient id="bg" cx="38%" cy="30%" r="65%">
+        <stop offset="0%" stop-color="#9B6B42"/>
+        <stop offset="48%" stop-color="#5C3317"/>
+        <stop offset="100%" stop-color="#2E1A0E"/>
+      </radialGradient>
+      <radialGradient id="sh" cx="30%" cy="22%" r="45%">
+        <stop offset="0%" stop-color="rgba(255,215,140,0.3)"/>
+        <stop offset="100%" stop-color="rgba(255,215,140,0)"/>
+      </radialGradient>
+    </defs>
+    <ellipse cx="50" cy="70" rx="36" ry="56" fill="url(#bg)"/>
+    <path d="M50 16 Q37 50 37 70 Q37 96 50 124" stroke="#1A0C05" stroke-width="4" fill="none" stroke-linecap="round"/>
+    <ellipse cx="50" cy="70" rx="36" ry="56" fill="url(#sh)"/>
+  </svg>
+</div>
+
+<!-- Mobile menu panel -->
+<div class="mobile-menu" id="mobileMenu" role="dialog" aria-modal="true" aria-label="Navigation">
+  <a href="#about" class="mm-link">Story</a>
+  <a href="#menu" class="mm-link">Menu</a>
+  <a href="#experience" class="mm-link">Experience</a>
+  <a href="#reservation" class="mm-link">Reserve</a>
+  <a href="#reservation" class="mm-cta">Reserve a Table</a>
+</div>
+
+<!-- NAV -->
+<nav id="nav" aria-label="Main navigation">
+  <a class="logo" href="#" aria-label="Brew Haven home"><span>Brew</span> Haven</a>
+  <ul class="nav-links" aria-label="Site links">
+    <li><a href="#about">Story</a></li>
+    <li><a href="#menu">Menu</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#reservation">Reserve</a></li>
+  </ul>
+  <a class="nav-reserve" href="#reservation" aria-label="Make a reservation">Reserve a Table</a>
+  <button class="nav-burger" id="navBurger" aria-label="Toggle navigation" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- HERO -->
+<section id="hero" aria-label="Hero">
+  <div class="hero-bg" aria-hidden="true"></div>
+  <div class="hero-vignette" aria-hidden="true"></div>
+  <div class="hero-lines" aria-hidden="true"></div>
+  <div class="hero-accent-line" aria-hidden="true"></div>
+  <div class="hero-particles" aria-hidden="true">
+    <div class="hparticle hp1"></div>
+    <div class="hparticle hp2"></div>
+    <div class="hparticle hp3"></div>
+    <div class="hparticle hp4"></div>
+    <div class="hparticle hp5"></div>
+  </div>
+
+  <!-- Desktop floating images -->
+  <div class="hero-img-zone" aria-hidden="true">
+    <div class="hero-ring"></div>
+    <div class="hero-ring2"></div>
+    <div class="hero-main-img">
+      <img src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=700&q=85&fit=crop" alt="" loading="eager"/>
+    </div>
+    <div class="hero-float-img hf1">
+      <img src="https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=300&q=80&fit=crop" alt=""/>
+    </div>
+    <div class="hero-float-img hf2">
+      <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=300&q=80&fit=crop" alt=""/>
+    </div>
+    <div class="hero-float-img hf3">
+      <img src="https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=300&q=80&fit=crop" alt=""/>
+    </div>
+  </div>
+
+  <div class="hero-content">
+    <p class="hero-tag" id="hTag">Specialty Coffee · New York City</p>
+    <h1 class="hero-h1" id="hH1">Crafted<br>with <em>Reverence,</em><br>Served Daily</h1>
+    <p class="hero-p" id="hP">House-roasted single-origin coffees, ceremonial matcha, and artisanal pastries — where every detail is an act of devotion.</p>
+    <div class="hero-btns" id="hBtns">
+      <a class="btn-gold" href="#menu">Discover the Menu</a>
+      <a class="btn-text" href="#reservation">Reserve a Table <span aria-hidden="true">→</span></a>
+    </div>
+    <div class="hero-stats" id="hStats" aria-label="Highlights">
+      <div><div class="hero-stat-num">12+</div><div class="hero-stat-label">Yrs Roasting</div></div>
+      <div><div class="hero-stat-num">4.9<span class="star">★</span></div><div class="hero-stat-label">Guest Rating</div></div>
+      <div><div class="hero-stat-num">6</div><div class="hero-stat-label">Origins</div></div>
+    </div>
+    <!-- Mobile hero image -->
+    <div class="hero-mobile-img" id="heroMobileImg" aria-hidden="true">
+      <img src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=900&q=85&fit=crop" alt="" loading="eager"/>
+    </div>
+  </div>
+
+
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-outer" aria-hidden="true">
+  <div class="marquee-inner" id="mqInner"></div>
+</div>
+
+<!-- ABOUT -->
+<section id="about" aria-labelledby="aboutHeading">
+  <div class="about-img-wrap">
+    <div class="about-img-main reveal-left">
+      <img src="https://images.unsplash.com/photo-1442512595331-e89e73853f31?w=800&q=85&fit=crop" alt="Barista carefully crafting a coffee" loading="lazy"/>
+      <div class="about-img-secondary" aria-hidden="true">
+        <img src="https://images.unsplash.com/photo-1447933601403-0c6688de566e?w=400&q=80&fit=crop" alt="" loading="lazy"/>
+      </div>
+    </div>
+    <div class="about-year-badge reveal" aria-hidden="true">
+      <span class="yr">2012</span>
+      <span class="est">Est. NYC</span>
+    </div>
+  </div>
+  <div class="about-text">
+    <p class="section-eyebrow reveal">Our Story</p>
+    <h2 class="section-h reveal" id="aboutHeading">A <em>Passion</em><br>Poured Daily</h2>
+    <div class="sep-line reveal" aria-hidden="true"></div>
+    <p class="body-text reveal">Brew Haven was born from a conviction that exceptional coffee is an art form. We source directly from smallholder farms across Ethiopia, Colombia, and Uji, Japan — roasting each batch in-house to coax out the unique character of every origin.</p>
+    <p class="body-text reveal">Our baristas train for months before serving their first cup. Because the person behind the bar shapes the experience as much as the bean itself.</p>
+    <div class="about-pillars reveal" aria-label="Key facts">
+      <div class="about-pillar"><div class="pillar-num" aria-label="12 plus years roasting">12+</div><div class="pillar-label">Years Roasting</div></div>
+      <div class="about-pillar"><div class="pillar-num" aria-label="6 origins sourced">6</div><div class="pillar-label">Origins Sourced</div></div>
+      <div class="about-pillar"><div class="pillar-num" aria-label="4.9 star guest rating">4.9</div><div class="pillar-label">Guest Rating</div></div>
+      <div class="about-pillar"><div class="pillar-num" aria-label="40 thousand plus cups poured">40k+</div><div class="pillar-label">Cups Poured</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- MENU -->
+<section id="menu" aria-labelledby="menuHeading">
+  <div class="menu-top">
+    <div>
+      <p class="section-eyebrow reveal">Our Offerings</p>
+      <h2 class="section-h reveal" id="menuHeading">The <em>Menu</em></h2>
+    </div>
+    <div class="menu-filter-wrap">
+      <div class="menu-filters" role="group" aria-label="Filter menu items" id="menuFilters">
+        <!-- Injected by JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- FEATURED — rendered by JS -->
+  <div id="menuFeatured"></div>
+
+  <!-- GRID WRAPPER -->
+  <div class="menu-grid-wrap">
+    <div class="menu-grid" id="menuGrid"></div>
+    <div class="menu-empty" id="menuEmpty" aria-live="polite">No items in this category yet.</div>
+  </div>
+</section>
+
+<!-- EXPERIENCE -->
+<section id="experience" aria-labelledby="expHeading">
+  <div class="exp-accent" aria-hidden="true">Brew</div>
+  <div class="exp-layout">
+    <div class="exp-img-collage" aria-hidden="true">
+      <div class="exp-img-a reveal-left">
+        <img src="https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?w=800&q=85&fit=crop" alt="" loading="lazy"/>
+      </div>
+      <div class="exp-img-b reveal-right">
+        <img src="https://images.unsplash.com/photo-1447933601403-0c6688de566e?w=500&q=80&fit=crop" alt="" loading="lazy"/>
+      </div>
+      <div class="exp-img-c reveal-scale">
+        <img src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=300&q=80&fit=crop" alt="" loading="lazy"/>
+      </div>
+    </div>
+    <div class="exp-text">
+      <p class="section-eyebrow reveal">Beyond the Cup</p>
+      <h2 class="section-h reveal" id="expHeading">The Full<br><em>Experience</em></h2>
+      <div class="sep-line reveal" aria-hidden="true"></div>
+      <div class="exp-features">
+        <div class="exp-feat reveal">
+          <span class="exp-feat-num" aria-hidden="true">01</span>
+          <div><div class="exp-feat-title">Roastery Tours</div><p class="exp-feat-text">Watch us roast in-house every Tuesday. Smell the transformation, meet the beans before they become your cup.</p></div>
+        </div>
+        <div class="exp-feat reveal">
+          <span class="exp-feat-num" aria-hidden="true">02</span>
+          <div><div class="exp-feat-title">Brewing Masterclasses</div><p class="exp-feat-text">Learn pour-over, AeroPress & espresso technique from our head barista in intimate sessions for up to 8 guests.</p></div>
+        </div>
+        <div class="exp-feat reveal">
+          <span class="exp-feat-num" aria-hidden="true">03</span>
+          <div><div class="exp-feat-title">Private Cupping Events</div><p class="exp-feat-text">Host a guided sensory journey for your team or celebration. Minimum 6, maximum 20 guests.</p></div>
+        </div>
+        <div class="exp-feat reveal">
+          <span class="exp-feat-num" aria-hidden="true">04</span>
+          <div><div class="exp-feat-title">Bean Subscriptions</div><p class="exp-feat-text">Fresh-roasted single-origin delivered weekly to your door. Customise grind, origin and roast profile.</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section id="testimonials" aria-labelledby="testHeading">
+  <div class="testimonials-bg-text" aria-hidden="true">HAVEN</div>
+  <p class="section-eyebrow reveal" style="justify-content:center">Guest Words</p>
+  <h2 class="section-h reveal" id="testHeading" style="text-align:center">What Our Guests <em>Say</em></h2>
+  <div class="test-grid">
+    <div class="test-card reveal">
+      <div class="test-stars" aria-label="5 stars">★★★★★</div>
+      <p class="test-quote">"The pour-over here changed how I think about coffee. I've been coming every single morning for two years — it's the ritual my whole day depends on."</p>
+      <div class="test-author-row">
+        <div class="test-avatar" aria-hidden="true">AJ</div>
+        <div><div class="test-author-name">Amara Johnson</div><div class="test-author-loc">Tribeca, NYC</div></div>
+      </div>
+    </div>
+    <div class="test-card reveal">
+      <div class="test-stars" aria-label="5 stars">★★★★★</div>
+      <p class="test-quote">"I hosted our company offsite here. The private cupping was extraordinary — our whole team still talks about that Ethiopian natural process."</p>
+      <div class="test-author-row">
+        <div class="test-avatar" aria-hidden="true">ML</div>
+        <div><div class="test-author-name">Marcus Laurent</div><div class="test-author-loc">SoHo, NYC</div></div>
+      </div>
+    </div>
+    <div class="test-card reveal">
+      <div class="test-stars" aria-label="5 stars">★★★★★</div>
+      <p class="test-quote">"The ceremonial matcha latte is unlike anything else in New York. The space, the staff, the craft — this place is genuinely special."</p>
+      <div class="test-author-row">
+        <div class="test-avatar" aria-hidden="true">YT</div>
+        <div><div class="test-author-name">Yuki Tanaka</div><div class="test-author-loc">Brooklyn, NYC</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RESERVATION -->
+<section id="reservation" aria-labelledby="resHeading">
+  <div class="res-bg-img" aria-hidden="true">
+    <img src="https://images.unsplash.com/photo-1442512595331-e89e73853f31?w=1400&q=70&fit=crop" alt="" loading="lazy"/>
+  </div>
+  <div class="res-bg-gradient" aria-hidden="true"></div>
+  <div class="res-content">
+    <p class="section-eyebrow reveal">Reserve</p>
+    <h2 class="section-h reveal" id="resHeading">Secure Your<br><em>Table</em></h2>
+    <div class="sep-line reveal" aria-hidden="true"></div>
+    <p class="body-text reveal">Walk-ins are always welcome. For weekend mornings and special brewing events, a reservation guarantees your place.</p>
+    <div class="res-hours reveal" aria-label="Opening hours">
+      <div class="res-h-row"><span class="res-h-day">Monday – Friday</span><span class="res-h-time">7:00 AM – 8:00 PM</span></div>
+      <div class="res-h-row"><span class="res-h-day">Saturday</span><span class="res-h-time">8:00 AM – 9:00 PM</span></div>
+      <div class="res-h-row"><span class="res-h-day">Sunday</span><span class="res-h-time">9:00 AM – 7:00 PM</span></div>
+    </div>
+  </div>
+  <div class="res-form reveal" aria-label="Reservation form">
+    <div class="form-row">
+      <div class="f-group"><label class="f-label" for="fname">First Name</label><input id="fname" class="f-input" type="text" placeholder="Alex" autocomplete="given-name"/></div>
+      <div class="f-group"><label class="f-label" for="lname">Last Name</label><input id="lname" class="f-input" type="text" placeholder="Rivera" autocomplete="family-name"/></div>
+    </div>
+    <div class="form-row">
+      <div class="f-group"><label class="f-label" for="rdate">Date</label><input id="rdate" class="f-input" type="date"/></div>
+      <div class="f-group"><label class="f-label" for="rtime">Time</label>
+        <select id="rtime" class="f-select">
+          <option value="">Select time</option>
+          <option>8:00 AM</option><option>9:00 AM</option><option>10:00 AM</option>
+          <option>11:00 AM</option><option>12:00 PM</option><option>1:00 PM</option>
+          <option>2:00 PM</option><option>3:00 PM</option><option>4:00 PM</option>
+          <option>5:00 PM</option><option>6:00 PM</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="f-group"><label class="f-label" for="rguests">Guests</label>
+        <select id="rguests" class="f-select">
+          <option>1 guest</option><option>2 guests</option><option>3 guests</option>
+          <option>4 guests</option><option>5+ guests</option>
+        </select>
+      </div>
+      <div class="f-group"><label class="f-label" for="roccasion">Occasion</label>
+        <select id="roccasion" class="f-select">
+          <option>Just visiting</option><option>Brew class</option>
+          <option>Private event</option><option>Roastery tour</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-row full">
+      <div class="f-group"><label class="f-label" for="rnotes">Special Requests</label><input id="rnotes" class="f-input" type="text" placeholder="Dietary needs, accessibility, etc." autocomplete="off"/></div>
+    </div>
+    <div class="form-row full">
+      <div class="f-group"><button class="f-submit" id="resSubmit" type="button">Confirm Reservation</button></div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-brand">
+    <a class="footer-logo" href="#" aria-label="Brew Haven home"><span>Brew</span> Haven</a>
+    <p class="footer-sub">Specialty coffee roasted with intention, served with care. Est. 2012, New York City.</p>
+  </div>
+  <div>
+    <div class="f-col-title">Visit Us</div>
+    <ul class="f-col-links">
+      <li><a href="#">147 Mercer St, SoHo</a></li>
+      <li><a href="#">New York, NY 10012</a></li>
+      <li><a href="tel:+12125550194">+1 (212) 555-0194</a></li>
+      <li><a href="mailto:hello@brewhaven.co">hello@brewhaven.co</a></li>
+    </ul>
+  </div>
+  <div>
+    <div class="f-col-title">Navigate</div>
+    <ul class="f-col-links">
+      <li><a href="#about">Our Story</a></li>
+      <li><a href="#menu">Menu</a></li>
+      <li><a href="#experience">Experience</a></li>
+      <li><a href="#reservation">Reserve</a></li>
+    </ul>
+  </div>
+  <div>
+    <div class="f-col-title">Follow</div>
+    <ul class="f-col-links">
+      <li><a href="#" rel="noopener">Instagram</a></li>
+      <li><a href="#" rel="noopener">TikTok</a></li>
+      <li><a href="#">Newsletter</a></li>
+      <li><a href="#">Press Kit</a></li>
+    </ul>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2025 Brew Haven Café. All rights reserved.</span>
+    <span>Crafted with ☕ in New York</span>
+  </div>
+</footer>
+
+<script>
+gsap.registerPlugin(ScrollTrigger);
+
+/* ── REDUCED MOTION CHECK ── */
+const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* ── MOBILE MENU ── */
+const burger = document.getElementById('navBurger');
+const mobileMenu = document.getElementById('mobileMenu');
+const mmLinks = mobileMenu.querySelectorAll('a');
+
+burger.addEventListener('click', () => {
+  const isOpen = mobileMenu.classList.toggle('open');
+  burger.classList.toggle('open', isOpen);
+  burger.setAttribute('aria-expanded', isOpen);
+  document.body.style.overflow = isOpen ? 'hidden' : '';
+});
+
+mmLinks.forEach(link => {
+  link.addEventListener('click', () => {
+    mobileMenu.classList.remove('open');
+    burger.classList.remove('open');
+    burger.setAttribute('aria-expanded', 'false');
+    document.body.style.overflow = '';
+  });
+});
+
+/* ── CURSOR (desktop only) ── */
+const cur = document.getElementById('cur');
+const cur2 = document.getElementById('cur2');
+if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+  let mx = 0, my = 0, c2x = 0, c2y = 0;
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX; my = e.clientY;
+    gsap.to(cur, { x: mx, y: my, duration: .08, ease: 'none' });
+  });
+  (function loop() {
+    c2x += (mx - c2x) * .12;
+    c2y += (my - c2y) * .12;
+    gsap.set(cur2, { x: c2x, y: c2y });
+    requestAnimationFrame(loop);
+  })();
+}
+
+/* ── NAV SCROLL ── */
+const nav = document.getElementById('nav');
+const onScroll = () => nav.classList.toggle('solid', scrollY > 60);
+window.addEventListener('scroll', onScroll, { passive: true });
+
+/* ── MARQUEE ── */
+const mqItems = ['House Roasted Daily', 'Single Origin Beans', 'Ceremonial Matcha', 'Artisan Pastries', 'Direct Trade', 'NYC Since 2012', 'Award Winning', 'Specialty Coffee', '18hr Cold Brew', 'Seasonal Menu', 'Private Cupping'];
+const mqEl = document.getElementById('mqInner');
+const mqHtml = [...mqItems, ...mqItems, ...mqItems]
+  .map(t => `<span class="mq-item"><span class="mq-dot" aria-hidden="true"></span>${t}</span>`)
+  .join('');
+mqEl.innerHTML = mqHtml + mqHtml;
+
+/* ── HERO ENTRANCE ── */
+if (!prefersReduced) {
+  const isDesktop = window.innerWidth >= 768;
+  const tl = gsap.timeline({ delay: .15 });
+
+  // Use gsap.from() consistently — final state is the natural CSS state (visible)
+  tl.from('#hTag', { opacity: 0, y: 22, duration: .85, ease: 'power3.out' })
+    .from('#hH1', { opacity: 0, y: 70, duration: 1.1, ease: 'power3.out' }, '.1')
+    .from('#hP', { opacity: 0, y: 35, duration: .85, ease: 'power3.out' }, '.45')
+    .from('#hBtns', { opacity: 0, y: 20, duration: .7, ease: 'power3.out' }, '.65')
+    .from('#hStats', { opacity: 0, y: 16, duration: .7, ease: 'power3.out' }, '.8');
+
+  if (isDesktop) {
+    // Desktop: dramatic entrance with directional movement
+    tl.from('.hero-main-img', { scale: .88, opacity: 0, duration: 1.3, ease: 'power3.out' }, '.1')
+      .from('.hf1', { x: 70, y: -50, opacity: 0, duration: 1, ease: 'back.out(1.4)' }, '.38')
+      .from('.hf2', { x: -50, y: 55, opacity: 0, duration: 1, ease: 'back.out(1.4)' }, '.52')
+      .from('.hf3', { x: -38, y: -45, opacity: 0, duration: .95, ease: 'back.out(1.4)' }, '.65');
+  } else {
+    // Mobile: float images are background layer — fade in gently after text
+    // Staggered so they drift in one by one behind the content
+    tl.from('.hero-main-img', { scale: .82, opacity: 0, duration: 1.4, ease: 'power2.out' }, '.5')
+      .from('.hf1', { opacity: 0, scale: .7, duration: 1.1, ease: 'back.out(1.3)' }, '.75')
+      .from('.hf2', { opacity: 0, scale: .7, duration: 1.0, ease: 'back.out(1.3)' }, '.9')
+      .from('.hf3', { opacity: 0, scale: .7, duration: 0.9, ease: 'back.out(1.3)' }, '1.05');
+  }
+
+  /* ── HERO PARALLAX (desktop only — layered on top of infinite float) ── */
+  if (isDesktop) {
+    // Use fromTo with scrub so reverse works cleanly
+    gsap.to('.hero-main-img', {
+      yPercent: -18, ease: 'none',
+      scrollTrigger: { trigger: '#hero', start: 'top top', end: 'bottom top', scrub: 1.5, invalidateOnRefresh: true }
+    });
+    gsap.to('.hf1', {
+      y: -55, x: 25, rotation: 13, ease: 'none',
+      scrollTrigger: { trigger: '#hero', start: 'top top', end: 'bottom top', scrub: 1, invalidateOnRefresh: true }
+    });
+    gsap.to('.hf2', {
+      y: 38, x: -18, rotation: -10, ease: 'none',
+      scrollTrigger: { trigger: '#hero', start: 'top top', end: 'bottom top', scrub: .8, invalidateOnRefresh: true }
+    });
+    gsap.to('.hf3', {
+      y: -28, x: -14, ease: 'none',
+      scrollTrigger: { trigger: '#hero', start: 'top top', end: 'bottom top', scrub: 1.2, invalidateOnRefresh: true }
+    });
+    gsap.to('.hero-ring', {
+      rotation: 360, ease: 'none',
+      scrollTrigger: { trigger: '#hero', start: 'top top', end: 'bottom top', scrub: 2, invalidateOnRefresh: true }
+    });
+    gsap.to('.hero-ring2', {
+      rotation: -180, ease: 'none',
+      scrollTrigger: { trigger: '#hero', start: 'top top', end: 'bottom top', scrub: 3, invalidateOnRefresh: true }
+    });
+  }
+
+  /* ── INFINITE FLOATING ANIMATIONS (Issue 3 & 4 fix) ── */
+  // These run on ALL devices, desktop and mobile, forever
+  // Each element gets unique duration, delay, amplitude for organic feel
+  const floatConfigs = [
+    { el: '.hf1', y: -18, rot: 6,  dur: 4.2, delay: 0 },
+    { el: '.hf2', y: -14, rot: -5, dur: 3.7, delay: 0.8 },
+    { el: '.hf3', y: -12, rot: 4,  dur: 5.1, delay: 1.5 },
+    { el: '.hero-main-img', y: -8, rot: 0, dur: 6.0, delay: 0.4 },
+  ];
+
+  floatConfigs.forEach(({ el, y, rot, dur, delay }) => {
+    const targets = document.querySelectorAll(el);
+    if (!targets.length) return;
+    gsap.to(el, {
+      y: y,
+      rotation: rot,
+      duration: dur,
+      repeat: -1,
+      yoyo: true,
+      ease: 'sine.inOut',
+      delay: delay,
+    });
+  });
+
+  // Ambient particle drift
+  document.querySelectorAll('.hparticle').forEach((p, i) => {
+    gsap.to(p, {
+      y: -12 - i * 4,
+      x: (i % 2 === 0 ? 1 : -1) * (5 + i * 2),
+      opacity: 0.8,
+      duration: 3.5 + i * 0.7,
+      repeat: -1,
+      yoyo: true,
+      ease: 'sine.inOut',
+      delay: i * 0.4,
+    });
+  });
+
+  /* ── GENERIC SCROLL REVEALS ── */
+  gsap.utils.toArray('.reveal').forEach(el => {
+    gsap.fromTo(el,
+      { opacity: 0, y: 38 },
+      { opacity: 1, y: 0, duration: .85, ease: 'power3.out',
+        scrollTrigger: { trigger: el, start: 'top 90%', toggleActions: 'play none none none' }
+      });
+  });
+
+  gsap.utils.toArray('.reveal-left').forEach(el => {
+    gsap.fromTo(el,
+      { opacity: 0, x: -55 },
+      { opacity: 1, x: 0, duration: 1, ease: 'power3.out',
+        scrollTrigger: { trigger: el, start: 'top 88%' }
+      });
+  });
+
+  gsap.utils.toArray('.reveal-right').forEach(el => {
+    gsap.fromTo(el,
+      { opacity: 0, x: 55 },
+      { opacity: 1, x: 0, duration: 1, ease: 'power3.out',
+        scrollTrigger: { trigger: el, start: 'top 88%' }
+      });
+  });
+
+  gsap.utils.toArray('.reveal-scale').forEach(el => {
+    gsap.fromTo(el,
+      { opacity: 0, scale: .88 },
+      { opacity: 1, scale: 1, duration: .9, ease: 'back.out(1.4)',
+        scrollTrigger: { trigger: el, start: 'top 90%' }
+      });
+  });
+
+  gsap.utils.toArray('.sep-line').forEach(el => {
+    gsap.fromTo(el,
+      { scaleX: 0, opacity: 0, transformOrigin: 'left center' },
+      { scaleX: 1, opacity: 1, duration: .75, ease: 'power3.out',
+        scrollTrigger: { trigger: el, start: 'top 92%' }
+      });
+  });
+
+  /* ── EXPERIENCE PARALLAX ── */
+  gsap.to('.exp-img-a img', { yPercent: -10, ease: 'none', scrollTrigger: { trigger: '#experience', start: 'top bottom', end: 'bottom top', scrub: 1, invalidateOnRefresh: true } });
+  gsap.to('.exp-img-b img', { yPercent: -7, ease: 'none', scrollTrigger: { trigger: '#experience', start: 'top bottom', end: 'bottom top', scrub: .7, invalidateOnRefresh: true } });
+  gsap.to('.exp-img-c', { yPercent: -18, ease: 'none', scrollTrigger: { trigger: '#experience', start: 'top bottom', end: 'bottom top', scrub: 1.1, invalidateOnRefresh: true } });
+  gsap.to('.exp-accent', { x: -70, ease: 'none', scrollTrigger: { trigger: '#experience', start: 'top bottom', end: 'bottom top', scrub: 1.8, invalidateOnRefresh: true } });
+
+  /* ── ABOUT PARALLAX ── */
+  gsap.to('.about-img-main img', { yPercent: -7, ease: 'none', scrollTrigger: { trigger: '#about', start: 'top bottom', end: 'bottom top', scrub: 1, invalidateOnRefresh: true } });
+  gsap.to('.about-img-secondary img', { yPercent: 9, ease: 'none', scrollTrigger: { trigger: '#about', start: 'top bottom', end: 'bottom top', scrub: .8, invalidateOnRefresh: true } });
+
+  /* ── TESTIMONIALS ── */
+  gsap.to('.testimonials-bg-text', {
+    y: -55, xPercent: -8, ease: 'none',
+    scrollTrigger: { trigger: '#testimonials', start: 'top bottom', end: 'bottom top', scrub: 1.4 }
+  });
+  gsap.utils.toArray('.test-card').forEach((c, i) => {
+    gsap.fromTo(c,
+      { y: 60, opacity: 0, rotateX: 10 },
+      { y: 0, opacity: 1, rotateX: 0, duration: .85, ease: 'power3.out', delay: i * .13,
+        scrollTrigger: { trigger: '#testimonials', start: 'top 82%' }
+      });
+  });
+
+} else {
+  /* Reduced motion: just make everything visible — CSS no longer sets opacity:0
+     so we just ensure reveal classes are cleared */
+  document.querySelectorAll('.reveal,.reveal-left,.reveal-right,.reveal-scale').forEach(el => {
+    el.style.opacity = '1';
+    el.style.transform = 'none';
+  });
+  // Hero elements are already visible in CSS (no opacity:0 in CSS anymore)
+  // Just ensure they're definitely shown
+  ['hTag','hH1','hP','hBtns','hStats'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) { el.style.opacity = '1'; el.style.transform = 'none'; }
+  });
+}
+
+/* ── RESIZE: refresh ScrollTrigger ── */
+let resizeTimer;
+window.addEventListener('resize', () => {
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(() => {
+    ScrollTrigger.refresh();
+  }, 200);
+});
+
+/* ══════════════════════════════════════════════════════
+   BREW HAVEN — UPGRADED MENU SYSTEM
+   Centralized data · Smart filtering · Premium animations
+══════════════════════════════════════════════════════ */
+
+/* ── MENU DATA ── */
+const MENU_CATEGORIES = [
+  { id: 'all',       label: 'All' },
+  { id: 'signature', label: 'Signature' },
+  { id: 'coffee',    label: 'Coffee' },
+  { id: 'espresso',  label: 'Espresso' },
+  { id: 'matcha',    label: 'Matcha' },
+  { id: 'tea',       label: 'Tea' },
+  { id: 'cold-brew', label: 'Cold Brew' },
+  { id: 'refresher', label: 'Refreshers' },
+  { id: 'breakfast', label: 'Breakfast' },
+  { id: 'sandwich',  label: 'Sandwiches' },
+  { id: 'pastry',    label: 'Pastries' },
+  { id: 'dessert',   label: 'Desserts' },
+  { id: 'seasonal',  label: 'Seasonal' },
+];
+
+// badge values: 'popular' | 'new-item' | 'bestseller' | 'seasonal' | 'chefs' | null
+// featured: true = show in large hero card instead of grid
+const MENU_ITEMS = [
+
+  /* ── SIGNATURE ── */
+  {
+    id: 'haven-reserve',
+    cat: ['signature', 'coffee'],
+    featured: true,
+    name: 'The Haven Reserve',
+    nameItalic: 'Reserve',
+    nameBase: 'The Haven',
+    desc: 'A triple-layer ritual: Ethiopian Yirgacheffe cold brew at the base, silky oat milk foam, and a hand-drawn caramel lattice on top. Our most requested creation.',
+    price: '$9.50',
+    badge: 'bestseller',
+    tags: ['Signature', 'Cold Brew Base'],
+    img: 'https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=900&q=85&fit=crop',
+    imgSm: 'https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=300&q=80&fit=crop',
+    catLabel: 'Signature',
+    featuredBadge: "Barista's Signature Creation",
+  },
+  {
+    id: 'obsidian-latte',
+    cat: ['signature', 'coffee'],
+    featured: false,
+    name: 'Obsidian Latte',
+    desc: 'Activated charcoal espresso over oat milk, dusted with smoked sea salt. Dark, dramatic, unforgettable.',
+    price: '$7.50',
+    badge: 'popular',
+    tags: ['Signature', 'Oat Milk'],
+    img: 'https://images.unsplash.com/photo-1485808191679-5f86510bd9d4?w=600&q=80&fit=crop',
+    imgSm: 'https://images.unsplash.com/photo-1485808191679-5f86510bd9d4?w=300&q=80&fit=crop',
+    catLabel: 'Signature',
+  },
+  {
+    id: 'golden-hour',
+    cat: ['signature'],
+    featured: false,
+    name: 'Golden Hour Latte',
+    desc: 'House turmeric blend, vanilla-poached oat milk, and a dusting of 24-carat gold flake. Anti-inflammatory luxury.',
+    price: '$8',
+    badge: 'new-item',
+    tags: ['Signature', 'Caffeine-Free'],
+    img: 'https://images.unsplash.com/photo-1447933601403-0c6688de566e?w=600&q=80&fit=crop',
+    imgSm: 'https://images.unsplash.com/photo-1447933601403-0c6688de566e?w=300&q=80&fit=crop',
+    catLabel: 'Signature',
+  },
+  {
+    id: 'midnight-bloom',
+    cat: ['signature', 'tea'],
+    featured: false,
+    name: 'Midnight Bloom',
+    desc: 'Butterfly pea flower tea shaken with jasmine syrup, a squeeze of yuzu, and sparkling water. Transforms from indigo to violet at your table.',
+    price: '$7',
+    badge: 'chefs',
+    tags: ['Signature', 'Color-Changing'],
+    img: 'https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=600&q=80&fit=crop',
+    imgSm: 'https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=300&q=80&fit=crop',
+    catLabel: 'Signature',
+  },
+
+  /* ── COFFEE ── */
+  {
+    id: 'single-origin-pourover',
+    cat: ['coffee'],
+    featured: false,
+    name: 'Single Origin Pour Over',
+    desc: 'Rotating single-origin beans dialled in fresh each morning. Ask your barista about today\'s origin story — Ethiopia, Colombia, or Burundi.',
+    price: '$7',
+    badge: 'popular',
+    tags: ['V60', 'Rotating Origin'],
+    img: 'https://images.unsplash.com/photo-1510591509098-f4fdc6d0ff04?w=600&q=80&fit=crop',
+    imgSm: 'https://images.unsplash.com/photo-1510591509098-f4fdc6d0ff04?w=300&q=80&fit=crop',
+    catLabel: 'Coffee',
+  },
+  {
+    id: 'vanilla-bean-latte',
+    cat: ['coffee'],
+    featured: false,
+    name: 'Vanilla Bean Latte',
+    desc: 'Double espresso with house-made Madagascar vanilla bean syrup and velvety whole milk microfoam. Comforting and precise.',
+    price: '$6.50',
+    badge: 'bestseller',
+    tags: ['Whole Milk', 'House Syrup'],
+    img: 'https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=600&q=80&fit=crop',
+    imgSm: 'https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=300&q=80&fit=crop',
+    catLabel: 'Coffee',
+  },
+  {
+    id: 'cortado',
+    cat: ['coffee'],
+    featured: false,
+    name: 'Haven Cortado',
+    desc: 'Equal parts ristretto and lightly steamed whole milk in a 4oz Gibraltar glass. Balance is everything.',
+    price: '$5',
+    badge: null,
+    tags: ['Gibraltar', 'Ristretto'],
+    img: 'https://images.unsplash.com/photo-1442512595331-e89e73853f31?w=600&q=80&fit=crop',
+    imgSm: 'https://images.unsplash.com/photo-1442512595331-e89e73853f31?w=300&q=80&fit=crop',
+    catLabel: 'Coffee',
+  },
+  {
+    id: 'flat-white',
+    cat: ['coffee'],
+    featured: false,
+    name: 'Flat White',
+    desc: 'Two ristretto shots, 160ml of silky microfoam. The most honest expression of espresso and milk in harmony.',
+    price: '$5.50',
+    badge: null,
+    tags: ['Microfoam', 'Double Ristretto'],
+    img: 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=600&q=80&fit=crop',
+    imgSm: 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=300&q=80&fit=crop',
+    catLabel: 'Coffee',
+  },
+  {
+    id: 'hazelnut-cappuccino',
+    cat: ['coffee'],
+    featured: false,
+    name: 'Hazelnut Cappuccino',
+    desc: 'Roasted-hazelnut syrup, double shot, and a thick cap of dry foam dusted with raw cacao. Rich without the guilt.',
+    price: '$6',
+    badge: null,
+    tags: ['Dry Foam', 'House Syrup'],
+    img: 'https://images.unsplash.com/photo-1517701604599-bb29b565090c?w=600&q=80&fit=crop',
+    imgSm: 'https://images.unsplash.com/photo-1517701604599-bb29b565090c?w=300&q=80&fit=crop',
+    catLabel: 'Coffee',
+  },
+
+  /* ── ESPRESSO ── */
+  {
+    id: 'velvet-espresso',
+    cat: ['espresso'],
+    featured: false,
+    name: 'Velvet Espresso',
+    desc: 'Double ristretto from our house blend — notes of dark chocolate, red fruit, and a lingering sweet finish that coats the palate.',
+    price: '$4.50',
+    badge: 'bestseller',
+    tags: ['Double Shot', 'House Blend'],
+    img: 'https://images.unsplash.com/photo-1485808191679-5f86510bd9d4?w=600&q=80&fit=crop',
+    imgSm: 'https://images.unsplash.com/photo-1485808191679-5f86510bd9d4?w=300&q=80&fit=crop',
+    catLabel: 'Espresso',
+  },
+  {
+    id: 'espresso-royale',
+    cat: ['espresso'],
+    featured: false,
+    name: 'Espresso Royale',
+    desc: 'A single-origin long shot over a cube of raw dark sugar. Allow it to dissolve slowly — the experience changes with every sip.',
+    price: '$5',
+    badge: 'chefs',
+    tags: ['Single Origin', 'Long Shot'],
+    img: 'https://images.unsplash.com/photo-1511920170033-f8396924c348?w=600&q=80&fit=crop',
+    imgSm: 'https://images.unsplash.com/photo-1511920170033-f8396924c348?w=300&q=80&fit=crop',
+    catLabel: 'Espresso',
+  },
+  {
+    id: 'affogato',
+    cat: ['espresso', 'dessert'],
+    featured: false,
+    name: 'Affogato al Caffè',
+    desc: 'Two shots of ristretto poured tableside over a scoop of Madagascan vanilla bean gelato. Theatre in a cup.',
+    price: '$7.50',
+    badge: 'popular',
+    tags: ['Dessert', 'Ristretto'],
+    img: 'https://images.unsplash.com/photo-1570145820259-b5b80c5c8bd6?w=600&q=80&fit=crop',
+    imgSm: 'https://images.unsplash.com/photo-1570145820259-b5b80c5c8bd6?w=300&q=80&fit=crop',
+    catLabel: 'Espresso',
+  },
+  {
+    id: 'espresso-tonic',
+    cat: ['espresso', 'refresher'],
+    featured: false,
+    name: 'Espresso Tonic',
+    desc: 'House-blend espresso floated over sparkling Fever-Tree tonic, a twist of lemon peel. Effervescent, bitter-bright, utterly refreshing.',
+    price: '$6',
+    badge: 'new-item',
+    tags: ['Sparkling', 'Iced'],
+    img: 'https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=600&q=80&fit=crop',
+    imgSm: 'https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=300&q=80&fit=crop',
+    catLabel: 'Espresso',
+  },
+
+  /* ── MATCHA ── */
+  {
+    id: 'kyoto-matcha-latte',
+    cat: ['matcha'],
+    featured: false,
+    name: 'Kyoto Matcha Latte',
+    desc: 'First-flush Uji ceremonial grade whisked to a jade foam, layered over steamed oat or whole milk. Earthy, umami, serene.',
+    price: '$6.50',
+    badge: 'bestseller',
+    tags: ['Ceremonial Grade', 'Uji, Japan'],
+    img: 'https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=600&q=80&fit=crop',
+    imgSm: 'https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=300&q=80&fit=crop',
+    catLabel: 'Matcha',
+  },
+  {
+    id: 'iced-hojicha-latte',
+    cat: ['matcha', 'tea'],
+    featured: false,
+    name: 'Iced Hojicha Latte',
+    desc: 'Roasted Japanese green tea steeped cold, shaken with oat milk and a touch of brown rice syrup. Low caffeine, high comfort.',
+    price: '$6.50',
+    badge: null,
+    tags: ['Roasted Green Tea', 'Low Caffeine'],
+    img: 'https://images.unsplash.com/photo-1544787219-7f47ccb76574?w=600&q=80&fit=crop',
+    imgSm: 'https://images.unsplash.com/photo-1544787219-7f47ccb76574?w=300&q=80&fit=crop',
+    catLabel: 'Matcha',
+  },
+  {
+    id: 'matcha-coconut-cold',
+    cat: ['matcha', 'cold-brew'],
+    featured: false,
+    name: 'Matcha Coconut Cold',
+    desc: 'Ceremonial matcha shaken with cold coconut cream, a pinch of sea salt, and poured over pebble ice. Tropical and meditative.',
+    price: '$7',
+    badge: 'popular',
+    tags: ['Coconut Cream', 'Shaken'],
+    img: 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=600&q=80&fit=crop',
+    imgSm: 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=300&q=80&fit=crop',
+    catLabel: 'Matcha',
+  },
+  {
+    id: 'pistachio-matcha',
+    cat: ['matcha'],
+    featured: false,
+    name: 'Pistachio Matcha Swirl',
+    desc: 'House pistachio paste folded into ceremonial matcha, steamed whole milk, finished with a spiral of pistachio cream. Ornate and addictive.',
+    price: '$7.50',
+    badge: 'chefs',
+    tags: ['House Paste', 'Artisan'],
+    img: 'https://images.unsplash.com/photo-1547592180-85f173990554?w=600&q=80&fit=crop',
+    imgSm: 'https://images.unsplash.com/photo-1547592180-85f173990554?w=300&q=80&fit=crop',
+    catLabel: 'Matcha',
+  },
+
+  /* ── TEA ── */
+  {
+    id: 'earl-grey-bloom',
+    cat: ['tea'],
+    featured: false,
+    name: 'Earl Grey Bloom',
+    desc: 'Rare bergamot-forward Earl Grey steeped to 85°, topped with lightly frothed whole milk and edible lavender blossoms.',
+    price: '$5.50',
+    badge: 'popular',
+    tags: ['Loose Leaf', 'Floral'],
+    img: 'https://images.unsplash.com/photo-1544787219-7f47ccb76574?w=600&q=80&fit=crop',
+    imgSm: 'https://images.unsplash.com/photo-1544787219-7f47ccb76574?w=300&q=80&fit=crop',
+    catLabel: 'Tea',
+  },
+  {
+    id: 'masala-chai',
+    cat: ['tea'],
+    featured: false,
+    name: 'Haven Masala Chai',
+    desc: 'House-ground whole spices — cardamom, clove, black pepper, cinnamon — simmered with Assam CTC and buffalo milk. No shortcuts.',
+    price: '$5.50',
+    badge: null,
+    tags: ['Whole Spices', 'Assam'],
+    img: 'https://images.unsplash.com/photo-1563822249366-3efb23b8e0c9?w=600&q=80&fit=crop',
+    imgSm: 'https://images.unsplash.com/photo-1563822249366-3efb23b8e0c9?w=300&q=80&fit=crop',
+    catLabel: 'Tea',
+  },
+  {
+    id: 'white-peony',
+    cat: ['tea'],
+    featured: false,
+    name: 'White Peony Tea',
+    desc: 'Bai Mu Dan white tea from Fujian, steeped precisely at 75°C for three minutes. Delicate as silk, complex as memory.',
+    price: '$6',
+    badge: 'chefs',
+    tags: ['Fujian', 'Loose Leaf'],
+    img: 'https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=600&q=80&fit=crop',
+    imgSm: 'https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=300&q=80&fit=crop',
+    catLabel: 'Tea',
+  },
+
+  /* ── COLD BREW ── */
+  {
+    id: 'cold-brew-reserve',
+    cat: ['cold-brew'],
+    featured: false,
+    name: 'Cold Brew Reserve',
+    desc: 'Steeped 18 hours in filtered water. Smooth, low-acid, endlessly refreshing over hand-cut crystal ice. Served in a chilled crystal carafe.',
+    price: '$6.50',
+    badge: 'bestseller',
+    tags: ['18hr Steep', 'Low Acid'],
+    img: 'https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=600&q=80&fit=crop',
+    imgSm: 'https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=300&q=80&fit=crop',
+    catLabel: 'Cold Brew',
+  },
+  {
+    id: 'caramel-cold-brew',
+    cat: ['cold-brew'],
+    featured: false,
+    name: 'Caramel Cold Brew',
+    desc: 'Our 18-hour cold brew sweetened with house salted caramel and finished with cold oat foam. The café\'s most photographed drink.',
+    price: '$7.50',
+    badge: 'popular',
+    tags: ['Salted Caramel', 'Oat Foam'],
+    img: 'https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=600&q=80&fit=crop',
+    imgSm: 'https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=300&q=80&fit=crop',
+    catLabel: 'Cold Brew',
+  },
+  {
+    id: 'nitro-cold-brew',
+    cat: ['cold-brew'],
+    featured: false,
+    name: 'Nitro Cold Brew',
+    desc: 'Cold brew infused with nitrogen on tap. Poured with a Guinness-like cascade — velvety, creamy, zero added dairy.',
+    price: '$7',
+    badge: 'new-item',
+    tags: ['Nitrogen-Infused', 'On Tap'],
+    img: 'https://images.unsplash.com/photo-1510591509098-f4fdc6d0ff04?w=600&q=80&fit=crop',
+    imgSm: 'https://images.unsplash.com/photo-1510591509098-f4fdc6d0ff04?w=300&q=80&fit=crop',
+    catLabel: 'Cold Brew',
+  },
+
+  /* ── REFRESHERS ── */
+  {
+    id: 'hibiscus-sparkling',
+    cat: ['refresher'],
+    featured: false,
+    name: 'Hibiscus Sparkling Lemonade',
+    desc: 'Dried hibiscus steeped overnight, freshly squeezed Sicilian lemon, and Topo Chico sparkling water. Tartly stunning, deeply refreshing.',
+    price: '$6',
+    badge: 'popular',
+    tags: ['Caffeine-Free', 'House-Made'],
+    img: 'https://images.unsplash.com/photo-1473541836890-a3aa8b01e749?w=600&q=80&fit=crop',
+    imgSm: 'https://images.unsplash.com/photo-1473541836890-a3aa8b01e749?w=300&q=80&fit=crop',
+    catLabel: 'Refresher',
+  },
+  {
+    id: 'yuzu-mint-cooler',
+    cat: ['refresher'],
+    featured: false,
+    name: 'Yuzu Mint Cooler',
+    desc: 'Fresh yuzu juice muddled with garden mint, honey syrup, and Pellegrino. Light, fragrant, a palate reset between sips.',
+    price: '$6',
+    badge: null,
+    tags: ['No Caffeine', 'Fresh Juice'],
+    img: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=600&q=80&fit=crop',
+    imgSm: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=300&q=80&fit=crop',
+    catLabel: 'Refresher',
+  },
+  {
+    id: 'passion-rose-agua',
+    cat: ['refresher'],
+    featured: false,
+    name: 'Passion & Rose Agua Fresca',
+    desc: 'Cold-pressed passion fruit, dried rose petals, agave, and cold sparkling water. Floral intensity in a glass.',
+    price: '$6.50',
+    badge: 'new-item',
+    tags: ['Caffeine-Free', 'Cold-Pressed'],
+    img: 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=600&q=80&fit=crop',
+    imgSm: 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=300&q=80&fit=crop',
+    catLabel: 'Refresher',
+  },
+
+  /* ── BREAKFAST ── */
+  {
+    id: 'truffle-egg-croissant',
+    cat: ['breakfast'],
+    featured: false,
+    name: 'Truffle Egg Croissant',
+    desc: 'Soft-scrambled Maplehurst eggs with black truffle shavings and crème fraîche, folded into a warm all-butter croissant.',
+    price: '$14',
+    badge: 'bestseller',
+    tags: ['Chef\'s Choice', 'Eggs'],
+    img: 'https://images.unsplash.com/photo-1555507036-ab1f4038808a?w=600&q=80&fit=crop',
+    imgSm: 'https://images.unsplash.com/photo-1555507036-ab1f4038808a?w=300&q=80&fit=crop',
+    catLabel: 'Breakfast',
+  },
+  {
+    id: 'avocado-toast',
+    cat: ['breakfast'],
+    featured: false,
+    name: 'Smashed Avocado Toast',
+    desc: 'Levain sourdough, Hass avocado smashed with preserved lemon, micro greens, chili oil, and a 7-minute egg. A classic, done right.',
+    price: '$13',
+    badge: 'popular',
+    tags: ['Vegetarian', 'House Sourdough'],
+    img: 'https://images.unsplash.com/photo-1525351484163-7529414344d8?w=600&q=80&fit=crop',
+    imgSm: 'https://images.unsplash.com/photo-1525351484163-7529414344d8?w=300&q=80&fit=crop',
+    catLabel: 'Breakfast',
+  },
+  {
+    id: 'granola-bowl',
+    cat: ['breakfast'],
+    featured: false,
+    name: 'Haven Granola Bowl',
+    desc: 'House-toasted oat and nut granola with local honey, Straus whole-milk yoghurt, seasonal berries, and a drizzle of tahini.',
+    price: '$11',
+    badge: null,
+    tags: ['Vegetarian', 'House-Toasted'],
+    img: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=600&q=80&fit=crop',
+    imgSm: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=300&q=80&fit=crop',
+    catLabel: 'Breakfast',
+  },
+  {
+    id: 'ricotta-toast',
+    cat: ['breakfast'],
+    featured: false,
+    name: 'Whipped Ricotta Toast',
+    desc: 'Toasted levain, house-whipped ricotta, warm fig compote, toasted walnuts, and a drizzle of raw wildflower honey. Poetry on bread.',
+    price: '$12',
+    badge: 'chefs',
+    tags: ['Vegetarian', 'House-Made'],
+    img: 'https://images.unsplash.com/photo-1496116218417-1a781b1c416c?w=600&q=80&fit=crop',
+    imgSm: 'https://images.unsplash.com/photo-1496116218417-1a781b1c416c?w=300&q=80&fit=crop',
+    catLabel: 'Breakfast',
+  },
+
+  /* ── SANDWICHES ── */
+  {
+    id: 'smoked-salmon-tartine',
+    cat: ['sandwich'],
+    featured: false,
+    name: 'Smoked Salmon Tartine',
+    desc: 'House-baked sourdough, whipped labneh, wild-caught Pacific salmon, everything seasoning, micro herbs, and a squeeze of lemon.',
+    price: '$15',
+    badge: 'popular',
+    tags: ['House Sourdough', 'Wild-Caught'],
+    img: 'https://images.unsplash.com/photo-1528736235302-52922df5c122?w=600&q=80&fit=crop',
+    imgSm: 'https://images.unsplash.com/photo-1528736235302-52922df5c122?w=300&q=80&fit=crop',
+    catLabel: 'Sandwich',
+  },
+  {
+    id: 'havarti-pesto-pressed',
+    cat: ['sandwich'],
+    featured: false,
+    name: 'Havarti & Pesto Pressed',
+    desc: 'Aged Havarti, house walnut-basil pesto, heirloom tomato, and arugula on pressed sourdough. Warm, melted perfection.',
+    price: '$14',
+    badge: null,
+    tags: ['Vegetarian', 'Pressed'],
+    img: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=600&q=80&fit=crop',
+    imgSm: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=300&q=80&fit=crop',
+    catLabel: 'Sandwich',
+  },
+  {
+    id: 'prosciutto-fig-ciabatta',
+    cat: ['sandwich'],
+    featured: false,
+    name: 'Prosciutto & Fig Ciabatta',
+    desc: 'Di Parma prosciutto, fresh fig, brie, rocket, balsamic reduction on toasted ciabatta. A study in Italian restraint.',
+    price: '$16',
+    badge: 'chefs',
+    tags: ['Di Parma', 'Artisan'],
+    img: 'https://images.unsplash.com/photo-1547592180-85f173990554?w=600&q=80&fit=crop',
+    imgSm: 'https://images.unsplash.com/photo-1547592180-85f173990554?w=300&q=80&fit=crop',
+    catLabel: 'Sandwich',
+  },
+
+  /* ── PASTRIES ── */
+  {
+    id: 'pistachio-danish',
+    cat: ['pastry'],
+    featured: false,
+    name: 'Pistachio Danish',
+    desc: 'Laminated yeasted dough, pistachio frangipane, Sicilian pistachio cream, and a dusting of rose sugar. Baked every morning at 6am.',
+    price: '$5.50',
+    badge: 'bestseller',
+    tags: ['Baked Daily', 'House-Made'],
+    img: 'https://images.unsplash.com/photo-1555507036-ab1f4038808a?w=600&q=80&fit=crop',
+    imgSm: 'https://images.unsplash.com/photo-1555507036-ab1f4038808a?w=300&q=80&fit=crop',
+    catLabel: 'Pastry',
+  },
+  {
+    id: 'cardamom-kouign',
+    cat: ['pastry'],
+    featured: false,
+    name: 'Cardamom Kouign-Amann',
+    desc: 'Laminated butter dough caramelised with cardamom sugar and fleur de sel. Baked fresh at 7am — sold out by noon, without exception.',
+    price: '$5',
+    badge: 'popular',
+    tags: ['Baked In-House', 'Limited'],
+    img: 'https://images.unsplash.com/photo-1563729784474-d77dbb933a9e?w=600&q=80&fit=crop',
+    imgSm: 'https://images.unsplash.com/photo-1563729784474-d77dbb933a9e?w=300&q=80&fit=crop',
+    catLabel: 'Pastry',
+  },
+  {
+    id: 'almond-croissant',
+    cat: ['pastry'],
+    featured: false,
+    name: 'Double-Baked Almond Croissant',
+    desc: 'Day-old croissant soaked in house almond syrup, filled with rich frangipane, and crowned with toasted flaked almonds. Twice the love.',
+    price: '$5.50',
+    badge: null,
+    tags: ['Twice-Baked', 'Frangipane'],
+    img: 'https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=600&q=80&fit=crop',
+    imgSm: 'https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=300&q=80&fit=crop',
+    catLabel: 'Pastry',
+  },
+  {
+    id: 'earl-grey-scone',
+    cat: ['pastry'],
+    featured: false,
+    name: 'Earl Grey & Lemon Scone',
+    desc: 'Buttermilk scone infused with bergamot, served warm with clotted cream and house lemon curd. British elegance, NYC precision.',
+    price: '$5',
+    badge: null,
+    tags: ['Buttermilk', 'Clotted Cream'],
+    img: 'https://images.unsplash.com/photo-1496116218417-1a781b1c416c?w=600&q=80&fit=crop',
+    imgSm: 'https://images.unsplash.com/photo-1496116218417-1a781b1c416c?w=300&q=80&fit=crop',
+    catLabel: 'Pastry',
+  },
+
+  /* ── DESSERTS ── */
+  {
+    id: 'dark-chocolate-tart',
+    cat: ['dessert'],
+    featured: false,
+    name: 'Dark Chocolate Tart',
+    desc: 'Valrhona 70% ganache in a salted butter shell, finished with Maldon sea salt and edible gold. Intensely satisfying.',
+    price: '$8',
+    badge: 'chefs',
+    tags: ['Valrhona', 'Gluten-Free Shell Option'],
+    img: 'https://images.unsplash.com/photo-1586985289688-ca3cf47d3e6e?w=600&q=80&fit=crop',
+    imgSm: 'https://images.unsplash.com/photo-1586985289688-ca3cf47d3e6e?w=300&q=80&fit=crop',
+    catLabel: 'Dessert',
+  },
+  {
+    id: 'tiramisu-haven',
+    cat: ['dessert'],
+    featured: false,
+    name: 'Haven Tiramisu',
+    desc: 'Savoiardi soaked in double espresso, layered with Mascarpone di Cremona and Marsala cream, dusted with Valrhona powder.',
+    price: '$9',
+    badge: 'bestseller',
+    tags: ['Espresso', 'Mascarpone'],
+    img: 'https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?w=600&q=80&fit=crop',
+    imgSm: 'https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?w=300&q=80&fit=crop',
+    catLabel: 'Dessert',
+  },
+  {
+    id: 'panna-cotta',
+    cat: ['dessert'],
+    featured: false,
+    name: 'Vanilla Panna Cotta',
+    desc: 'Jersey cream, Tahitian vanilla, set to a trembling wobble. Served with a spiced red berry coulis and crystallised violet petals.',
+    price: '$8.50',
+    badge: null,
+    tags: ['Gluten-Free', 'Jersey Cream'],
+    img: 'https://images.unsplash.com/photo-1563822249366-3efb23b8e0c9?w=600&q=80&fit=crop',
+    imgSm: 'https://images.unsplash.com/photo-1563822249366-3efb23b8e0c9?w=300&q=80&fit=crop',
+    catLabel: 'Dessert',
+  },
+
+  /* ── SEASONAL SPECIALS ── */
+  {
+    id: 'maple-spice-latte',
+    cat: ['seasonal', 'coffee'],
+    featured: false,
+    name: 'Maple Spice Latte',
+    desc: 'House-made Grade A Vermont maple syrup, cinnamon, a pinch of cayenne, double espresso, and velvety oat milk foam. Autumn in a cup.',
+    price: '$7.50',
+    badge: 'seasonal',
+    tags: ['Autumn Special', 'Vermont Maple'],
+    img: 'https://images.unsplash.com/photo-1517701604599-bb29b565090c?w=600&q=80&fit=crop',
+    imgSm: 'https://images.unsplash.com/photo-1517701604599-bb29b565090c?w=300&q=80&fit=crop',
+    catLabel: 'Seasonal',
+  },
+  {
+    id: 'cherry-blossom-matcha',
+    cat: ['seasonal', 'matcha'],
+    featured: false,
+    name: 'Cherry Blossom Matcha',
+    desc: 'Spring edition: ceremonial matcha with house-made sakura syrup and a single pickled cherry blossom petal pressed against the glass.',
+    price: '$8',
+    badge: 'seasonal',
+    tags: ['Spring Only', 'Sakura Syrup'],
+    img: 'https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=600&q=80&fit=crop',
+    imgSm: 'https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=300&q=80&fit=crop',
+    catLabel: 'Seasonal',
+  },
+  {
+    id: 'pumpkin-cold-foam',
+    cat: ['seasonal', 'coffee'],
+    featured: false,
+    name: 'Pumpkin Spice Cold Foam',
+    desc: 'Cold brew topped with spiced pumpkin-cream cold foam, nutmeg freshly grated to order. No syrups. All real ingredients.',
+    price: '$8',
+    badge: 'seasonal',
+    tags: ['Fall Edition', 'Cold Foam'],
+    img: 'https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=600&q=80&fit=crop',
+    imgSm: 'https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=300&q=80&fit=crop',
+    catLabel: 'Seasonal',
+  },
+  {
+    id: 'yuzu-shiso-fizz',
+    cat: ['seasonal', 'refresher'],
+    featured: false,
+    name: 'Yuzu Shiso Fizz',
+    desc: 'Summer exclusive: fresh yuzu, shiso simple syrup, cucumber water, and Topo Chico. Herbaceous, tart, impossibly clean on the palate.',
+    price: '$7',
+    badge: 'seasonal',
+    tags: ['Summer Only', 'No Caffeine'],
+    img: 'https://images.unsplash.com/photo-1473541836890-a3aa8b01e749?w=600&q=80&fit=crop',
+    imgSm: 'https://images.unsplash.com/photo-1473541836890-a3aa8b01e749?w=300&q=80&fit=crop',
+    catLabel: 'Seasonal',
+  },
+];
+
+/* ── MENU ENGINE ── */
+(function MenuEngine() {
+  const filtersEl   = document.getElementById('menuFilters');
+  const featuredEl  = document.getElementById('menuFeatured');
+  const gridEl      = document.getElementById('menuGrid');
+  const emptyEl     = document.getElementById('menuEmpty');
+
+  let activeFilter = 'all';
+
+  /* ── Build filter buttons ── */
+  MENU_CATEGORIES.forEach(cat => {
+    const btn = document.createElement('button');
+    btn.className = 'mf' + (cat.id === 'all' ? ' on' : '');
+    btn.dataset.f = cat.id;
+    btn.textContent = cat.label;
+    btn.setAttribute('aria-pressed', cat.id === 'all' ? 'true' : 'false');
+    filtersEl.appendChild(btn);
+  });
+
+  /* ── Sort helper ── */
+  function sortItems(items) {
+    const BADGE_PRIORITY = { bestseller: 0, popular: 1, chefs: 2, seasonal: 3, 'new-item': 4 };
+    return [...items].sort((a, b) => {
+      const pa = BADGE_PRIORITY[a.badge] ?? 5;
+      const pb = BADGE_PRIORITY[b.badge] ?? 5;
+      if (pa !== pb) return pa - pb;
+      return a.name.localeCompare(b.name);
+    });
+  }
+
+  /* ── Get items for a filter ── */
+  function getItems(filterId) {
+    return filterId === 'all'
+      ? MENU_ITEMS
+      : MENU_ITEMS.filter(item => item.cat.includes(filterId));
+  }
+
+  /* ── Featured card HTML ── */
+  function buildFeatured(item) {
+    if (!item) return '';
+    return `
+    <div class="menu-featured" role="article" aria-label="${item.name} — featured item">
+      <div class="mf-img">
+        <img src="${item.img}" alt="${item.name}" loading="lazy"/>
+        <div class="mf-overlay" aria-hidden="true"></div>
+      </div>
+      <div class="mf-content">
+        <div class="mf-badge" aria-label="Featured">${item.featuredBadge || 'Featured Creation'}</div>
+        <h3 class="mf-name">${item.nameBase ? item.nameBase + '<br><em>' + item.nameItalic + '</em>' : item.name}</h3>
+        <p class="mf-desc">${item.desc}</p>
+        <div class="mf-footer">
+          <div class="mf-price" aria-label="Price ${item.price}">${item.price}</div>
+          ${item.badge ? `<span class="mf-badge-pill">${item.badge.replace('-', ' ')}</span>` : ''}
+        </div>
+      </div>
+    </div>`;
+  }
+
+  /* ── Menu card HTML ── */
+  function buildCard(item) {
+    const tagsHtml = item.tags.map((t, i) =>
+      `<span class="mc-tag${i === 0 ? ' sig' : ''}">${t}</span>`
+    ).join('');
+    const badgeHtml = item.badge
+      ? `<span class="mc-img-badge ${item.badge}" aria-label="${item.badge.replace('-', ' ')}">${item.badge.replace('-', ' ')}</span>`
+      : '';
+    return `
+    <article class="mc" data-id="${item.id}" aria-label="${item.name}, ${item.price}">
+      <div class="mc-img-wrap">
+        <img class="mc-img" src="${item.img}" alt="${item.name}" loading="lazy"/>
+        <div class="mc-img-overlay" aria-hidden="true"></div>
+        <span class="mc-img-cat" aria-label="Category: ${item.catLabel}">${item.catLabel}</span>
+        ${badgeHtml}
+        <div class="mc-float-img" aria-hidden="true"><img src="${item.imgSm}" alt=""/></div>
+      </div>
+      <div class="mc-body">
+        <div class="mc-top">
+          <h3 class="mc-name">${item.name}</h3>
+          <span class="mc-price" aria-label="${item.price}">${item.price}</span>
+        </div>
+        <p class="mc-desc">${item.desc}</p>
+        <div class="mc-tags">${tagsHtml}</div>
+      </div>
+    </article>`;
+  }
+
+  /* ── Render menu for filter ── */
+  function render(filterId, animate = false) {
+    const allItems = getItems(filterId);
+    const featured = filterId === 'all' || filterId === 'signature' || filterId === 'coffee'
+      ? allItems.find(i => i.featured)
+      : null;
+    const gridItems = sortItems(allItems.filter(i => !i.featured || i !== featured));
+
+    const doRender = () => {
+      /* Featured */
+      featuredEl.innerHTML = featured ? buildFeatured(featured) : '';
+
+      /* Grid */
+      if (gridItems.length === 0) {
+        gridEl.innerHTML = '';
+        emptyEl.style.display = 'block';
+      } else {
+        emptyEl.style.display = 'none';
+        gridEl.innerHTML = gridItems.map(buildCard).join('');
+      }
+
+      /* Re-attach hover float effects (desktop only) */
+      if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+        attachCardEffects();
+      }
+
+      /* Staggered entrance — always use fromTo so final state is guaranteed */
+      if (animate && !prefersReduced) {
+        const cards = gridEl.querySelectorAll('.mc');
+        gsap.fromTo(cards,
+          { opacity: 0, y: 26, scale: .97 },
+          { opacity: 1, y: 0, scale: 1, duration: .5, ease: 'power3.out', stagger: .055 }
+        );
+        if (featured) {
+          const featCard = featuredEl.querySelector('.menu-featured');
+          if (featCard) {
+            gsap.fromTo(featCard,
+              { opacity: 0, y: 18 },
+              { opacity: 1, y: 0, duration: .65, ease: 'power3.out' }
+            );
+          }
+        }
+      } else {
+        /* No animation — ensure everything is fully visible */
+        gridEl.querySelectorAll('.mc').forEach(c => { c.style.opacity = '1'; c.style.transform = 'none'; });
+      }
+    };
+
+    if (animate && !prefersReduced) {
+      /* Kill any running tweens on existing cards first */
+      const existing = [...gridEl.querySelectorAll('.mc')];
+      if (existing.length > 0) {
+        gsap.killTweensOf(existing);
+        gsap.to(existing, {
+          opacity: 0, y: -14, scale: .97,
+          duration: .22, ease: 'power2.in',
+          stagger: .025,
+          onComplete: doRender
+        });
+      } else {
+        doRender();
+      }
+    } else {
+      doRender();
+    }
+  }
+
+  /* ── Desktop card interactions ── */
+  function attachCardEffects() {
+    const cards = gridEl.querySelectorAll('.mc');
+    cards.forEach(card => {
+      /* Tilt */
+      card.addEventListener('mousemove', e => {
+        const r = card.getBoundingClientRect();
+        const tx = ((e.clientX - r.left) / r.width - .5) * 10;
+        const ty = ((e.clientY - r.top) / r.height - .5) * -8;
+        gsap.to(card, { rotateX: ty, rotateY: tx, duration: .38, ease: 'power2.out', transformPerspective: 900, transformOrigin: 'center center' });
+      });
+      card.addEventListener('mouseleave', () => {
+        gsap.to(card, { rotateX: 0, rotateY: 0, duration: .6, ease: 'elastic.out(1,.55)' });
+      });
+
+      /* Float image */
+      const float = card.querySelector('.mc-float-img');
+      if (!float) return;
+      card.addEventListener('mouseenter', () => {
+        gsap.fromTo(float, { scale: .5, y: 30, opacity: 0 }, { opacity: 1, scale: 1, y: 0, duration: .42, ease: 'back.out(1.5)' });
+      });
+      card.addEventListener('mousemove', e => {
+        const r = card.getBoundingClientRect();
+        gsap.to(float, { x: e.clientX - r.left - 55, y: e.clientY - r.top - 55, duration: .3, ease: 'power2.out' });
+      });
+      card.addEventListener('mouseleave', () => {
+        gsap.to(float, { opacity: 0, scale: .55, duration: .26, ease: 'power2.in' });
+      });
+    });
+  }
+
+  /* ── Initial render (no animation) ── */
+  render('all', false);
+
+  /* ── Initial GSAP scroll animation for menu section ── */
+  if (!prefersReduced) {
+    ScrollTrigger.create({
+      trigger: '#menu',
+      start: 'top 85%',
+      once: true,
+      onEnter: () => {
+        const cards = gridEl.querySelectorAll('.mc');
+        const feat  = featuredEl.querySelector('.menu-featured');
+        if (feat) {
+          gsap.fromTo(feat,
+            { opacity: 0, x: -40 },
+            { opacity: 1, x: 0, duration: .9, ease: 'power3.out' }
+          );
+        }
+        gsap.fromTo(cards,
+          { opacity: 0, y: 40, scale: .96 },
+          { opacity: 1, y: 0, scale: 1, duration: .65, ease: 'power3.out', stagger: .055 }
+        );
+      }
+    });
+  }
+
+  /* ── Filter click handler ── */
+  filtersEl.addEventListener('click', e => {
+    const btn = e.target.closest('.mf');
+    if (!btn || btn.dataset.f === activeFilter) return;
+    activeFilter = btn.dataset.f;
+
+    /* Update active state */
+    filtersEl.querySelectorAll('.mf').forEach(b => {
+      const isOn = b === btn;
+      b.classList.toggle('on', isOn);
+      b.setAttribute('aria-pressed', isOn ? 'true' : 'false');
+    });
+
+    /* Scroll active button into view within the filter bar only — never the page */
+    if (window.innerWidth < 768) {
+      const barRect = filtersEl.getBoundingClientRect();
+      const btnRect = btn.getBoundingClientRect();
+      const offset  = btnRect.left - barRect.left - (barRect.width / 2) + (btnRect.width / 2);
+      filtersEl.scrollBy({ left: offset, behavior: 'smooth' });
+    }
+
+    /* Re-render with animation */
+    render(activeFilter, true);
+  });
+
+})();
+
+
+/* ── RESERVATION SUBMIT ── */
+const resBtn = document.getElementById('resSubmit');
+resBtn.addEventListener('click', function () {
+  const orig = this.textContent;
+  this.textContent = 'Confirming…';
+  this.disabled = true;
+  if (!prefersReduced) gsap.to(this, { opacity: .6, duration: .2 });
+  setTimeout(() => {
+    this.textContent = '✓ Reservation Confirmed';
+    this.style.background = 'linear-gradient(135deg,#6B8F5E,#8BAF7A)';
+    if (!prefersReduced) gsap.to(this, { opacity: 1, scale: 1.02, duration: .3, ease: 'back.out' });
+    setTimeout(() => {
+      this.textContent = orig;
+      this.style.background = '';
+      this.disabled = false;
+      if (!prefersReduced) gsap.to(this, { scale: 1, duration: .3 });
+    }, 3500);
+  }, 1400);
+});
+
+/* ── CLEANUP ON UNLOAD ── */
+window.addEventListener('beforeunload', () => {
+  ScrollTrigger.getAll().forEach(st => st.kill());
+  gsap.globalTimeline.clear();
+});
+</script>
+</body>
+</html>
